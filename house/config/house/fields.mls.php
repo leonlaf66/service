@@ -75,7 +75,7 @@ return [
     ],
     'roi' => [
         'value' => function ($d, $m) {
-            return app('App\Repositories\MLs\HouseRoi')->getResults($m);
+            return app('App\Repositories\Mls\HouseRoi')->getResults($m);
         }
     ]
 ];
