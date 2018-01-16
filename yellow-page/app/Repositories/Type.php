@@ -16,6 +16,7 @@ class Type
             ->select('id', 'name', 'name_zh')
             ->where('taxonomy_id', self::TAXONMY_ID)
             ->where('status', self::STATUS_ENABLED)
+            ->where('parent_id', 0)
             ->orderBy('sort_order', 'ASC');
     }
 }
