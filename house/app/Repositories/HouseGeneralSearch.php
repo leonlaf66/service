@@ -78,6 +78,7 @@ class HouseGeneralSearch extends HouseSearchAbstract
                     'beds' => $item->no_beds,
                     'baths' => $item->no_baths,
                     'square' => $item->square_feet,
+                    'lot_size' => $item->lot_size,
                     'price' => $item->list_price,
                     'prop' => $item->prop_type,
                     'status' => $item->status,

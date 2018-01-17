@@ -19,6 +19,7 @@ class HouseGet
             'beds' => $house->no_beds,
             'baths' => $house->no_baths,
             'square_feet' => $house->square_feet,
+            'lot_size' => $house->lot_size,
             'area' => $house->getFieldValue('area'),
             'status' => $house->status,
             'l_days' => $house->getFieldValue('list_days'),

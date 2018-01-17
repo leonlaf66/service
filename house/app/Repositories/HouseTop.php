@@ -23,6 +23,7 @@ class HouseTop
                 'beds' => $d->no_beds,
                 'baths' => $d->no_baths,
                 'square' => $d->square_feet,
+                'lot_size' => $d->lot_size,
                 'price' => $d->list_price,
                 'prop' => $d->prop_type,
                 'status' => $d->status,
