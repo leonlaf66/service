@@ -70,6 +70,7 @@ return [
         }
     ],
     'expenses' => [
+        'flat' => true, // 展开标记
         'value' => function ($d) {
             $values = [];
             $expenses = $d->xpath('Expenses/Expense');
