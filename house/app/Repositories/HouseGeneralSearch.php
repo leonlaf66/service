@@ -27,8 +27,14 @@ class HouseGeneralSearch extends HouseSearchAbstract
                 $query->where('list_no', $q);
             } else { // 当做城市名
                 if ($cityId = get_house_adapter('City')->findIdByName(state_id(), $q)) {
-                    $query->where('city_id', $cityId);
-                    // or parent_city_id=:city_id
+                    if (area_id() === 'ca') {
+                        $query->where(function ($query) use ($cityId) {
+                            $query->where('city_id', $cityId);
+                            $query->orWhere('parent_city_id', $cityId);
+                        });
+                    } else {
+                        $query->where('city_id', $cityId);
+                    }
                 } else {
                     $query->whereRaw('1=2');
                 }

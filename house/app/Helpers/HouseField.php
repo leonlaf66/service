@@ -16,28 +16,41 @@ class HouseField
     public static function format(& $data, $opt = [])
     {
         switch ($opt['format']) {
+            case 'date':
+                $data['value'] = date('Y-m-d', strtotime($data['value']));
+                break;
+            case 'datetime':
+                $data['value'] = date('Y-m-d H:i', strtotime($data['value']));
+                break;
+            case 'rental.total.price':
+            case 'sell.total.price':
             case 'money':
+                if (floatval($data['value']) === 0.0) {
+                    $data['is_empty'] = true;
+                    break;
+                }
                 if (intval($data['value']) < 10000) {
                     $data = array_merge($data, [
                         'value' => number_format($data['value'], 0),
                         'prefix' => tt('$', ''),
                         'suffix' => tt('', '美元')
                     ]);
-                    $data = array_filter($data, function ($d) {
-                        return !empty($d);
-                    });
+                } else {
+                    $data = array_merge($data, [
+                        'value' => tt(number_format($data['value'], 0), number_format($data['value'] / 10000, 2)),
+                        'prefix' => tt('$', ''),
+                        'suffix' => tt('', '万美元')
+                    ]);
+                }
+                if ($data['prefix'] === '') unset($data['prefix']);
+                if ($data['suffix'] === '') unset($data['suffix']);
+                break;
+            case 'area':
+            case 'sq.ft':
+                if (intval($data['value']) === 0) {
+                    $data['is_empty'] = true;
                     break;
                 }
-                $data = array_merge($data, [
-                    'value' => tt(number_format($data['value'], 0), number_format($data['value'] / 10000, 2)),
-                    'prefix' => tt('$', ''),
-                    'suffix' => tt('', '万美元')
-                ]);
-                $data = array_filter($data, function ($d) {
-                    return !empty($d);
-                });
-                break;
-            case 'sq.ft':
                 if (is_chinese()) {
                     $data = array_merge($data, [
                         'value' => number_format(intval(floatval($data['value']) * 0.092903), 0),
@@ -51,6 +64,10 @@ class HouseField
                 }
                 break;
             case 'money/sq.ft':
+                if (intval($data['value']) === 0) {
+                    $data['is_empty'] = true;
+                    break;
+                }
                 if (is_chinese()) {
                     $data['value'] = number_format(floatval($data['value']) / 0.092903, 0);
                     $data['suffix'] = '美元/平方米';

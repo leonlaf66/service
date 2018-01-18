@@ -70,7 +70,14 @@ class HouseField
 
         // format
         if (!empty($data['value']) && isset($opt['format'])) {
-            // \App\Helpers\HouseField::format($data, $opt);
+            \App\Helpers\HouseField::format($data, $opt);
+        } else {
+            if (!empty($opt['prefix'])) {
+                $data['prefix'] = $opt['prefix'];
+            }
+            if (!empty($opt['suffix'])) {
+                $data['suffix'] = $opt['suffix'];
+            }
         }
 
         // title
