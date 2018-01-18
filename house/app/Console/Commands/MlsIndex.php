@@ -10,29 +10,20 @@ class MlsIndex extends Command
 
     public function handle()
     {
-        $mode  = $this->argument('mode');
+        $mode  = $this->argument('mode', 'new');
 
         $query = app('db')->connection('pgsql2')
             ->table('mls_rets')
-            ->select('list_no', 'update_date')
+            ->select('update_date', 'json_data')
             ->orderBy('list_no');
 
-        $total = $query->count();
-        $self = $this;
-        $query->chunk(1000, function ($rows) use ($self, $total){
-            foreach ($rows as $row) {
-                app('db')->table('house_index_v2')
-                    ->where('list_no', $row->list_no)
-                    ->update(['update_at' => $row->update_date]);
-                $self->processMessageOutput($total);
-            }
-        });
-        /*
-        if ($mode === 'new') {
+        if ($mode !== 'all') {
             $lastUpdateAt = app('db')->table('house_index_v2')
                 ->where('area_id', 'ma')
                 ->max('update_at');
-            $query->where('update_date', '>', $lastUpdateAt);
+            if ($lastUpdateAt) {
+                $query->where('update_date', '>', $lastUpdateAt);
+            }
         }
 
         $self = $this;
@@ -42,7 +33,7 @@ class MlsIndex extends Command
                 $self->processRow($row);
                 $self->processMessageOutput($total);
             }
-        });*/
+        });
     }
 
     public function processRow(& $row)
@@ -173,8 +164,8 @@ class MlsIndex extends Command
             'is_online_abled' => function($d) {
                 return in_array(array_get($d, 'status'), ['ACT','NEW','BOM','PCG','RAC','EXT']);
             },
-            'update_at' => function ($d) {
-                return array_get($d, 'update_date');
+            'update_at' => function ($d, $row) {
+                return $row->update_date;
             },
             'index_at' => function () {
                 return date('Y-m-d H:i:s');

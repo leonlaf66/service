@@ -5,7 +5,7 @@ use Illuminate\Console\Command;
 
 class ListhubIndex extends Command
 {
-    protected $signature = 'listhub:index {mode}';
+    protected $signature = 'listhub:index {mode=new}';
     protected $description = '索引listhub数据';
 
     public function handle()
@@ -14,22 +14,19 @@ class ListhubIndex extends Command
 
         $query = app('db')->connection('pgsql2')
             ->table('mls_rets_listhub')
-            ->select('list_no', 'state', 'prop_type', 'status', 'latitude', 'longitude', 'last_update_date')
+            ->select('list_no', 'state', 'prop_type', 'xml', 'status', 'latitude', 'longitude', 'last_update_date')
             ->whereIn('state', ['NY', 'GA', 'CA', 'IL'])
             ->orderBy('list_no');
 
-        $total = $query->count();
-        $self = $this;
-        $query->chunk(1000, function ($rows) use ($self, $total){
-            foreach ($rows as $row) {
-                app('db')->table('house_index_v2')
-                    ->where('list_no', $row->list_no)
-                    ->update(['update_at' => $row->last_update_date]);
-                $self->processMessageOutput($total);
+        if ($mode !== 'all') {
+            $lastUpdateAt = app('db')->table('house_index_v2')
+                ->where('area_id', 'ma')
+                ->max('update_at');
+            if ($lastUpdateAt) {
+                $query->where('last_update_date', '>', $lastUpdateAt);
             }
-            unset($rows);
-        });
-        /*
+        }
+
         $self = $this;
         $total = $query->count();
         $query->chunk(1000, function ($rows) use ($self, $total){
@@ -40,7 +37,7 @@ class ListhubIndex extends Command
             }
             unset($rows);
             sleep(3);
-        });*/
+        });
     }
 
     public function processRow(& $row)
