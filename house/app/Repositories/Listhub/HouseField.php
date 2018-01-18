@@ -50,7 +50,7 @@ class HouseField
      * @param $name
      * @param $opt
      */
-    public function getEntity($house, $name, $opt = [])
+    public function getEntity($house, $name, & $opt = [])
     {
         $data = [
             'title' => '',
