@@ -18,7 +18,7 @@ class ListhubIndex extends Command
             ->whereIn('state', ['NY', 'GA', 'CA', 'IL'])
             ->orderBy('list_no');
 
-        if ($mode !== 'all') {
+        if ($mode === 'new') {
             $lastUpdateAt = app('db')->table('house_index_v2')
                 ->where('area_id', 'ma')
                 ->max('update_at');

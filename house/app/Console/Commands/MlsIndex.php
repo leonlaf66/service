@@ -17,7 +17,7 @@ class MlsIndex extends Command
             ->select('update_date', 'json_data')
             ->orderBy('list_no');
 
-        if ($mode !== 'all') {
+        if ($mode === 'new') {
             $lastUpdateAt = app('db')->table('house_index_v2')
                 ->where('area_id', 'ma')
                 ->max('update_at');
