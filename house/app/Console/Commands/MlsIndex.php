@@ -5,7 +5,7 @@ use Illuminate\Console\Command;
 
 class MlsIndex extends Command
 {
-    protected $signature = 'mls:index {mode}';
+    protected $signature = 'mls:index {mode=new}';
     protected $description = '索引mls数据';
 
     public function handle()
@@ -14,8 +14,26 @@ class MlsIndex extends Command
 
         $query = app('db')->connection('pgsql2')
             ->table('mls_rets')
-            ->select('json_data')
+            ->select('list_no', 'update_date')
             ->orderBy('list_no');
+
+        $total = $query->count();
+        $self = $this;
+        $query->chunk(1000, function ($rows) use ($self, $total){
+            foreach ($rows as $row) {
+                app('db')->table('house_index_v2')
+                    ->where('list_no', $row->list_no)
+                    ->update(['update_at' => $row->update_date]);
+                $self->processMessageOutput($total);
+            }
+        });
+        /*
+        if ($mode === 'new') {
+            $lastUpdateAt = app('db')->table('house_index_v2')
+                ->where('area_id', 'ma')
+                ->max('update_at');
+            $query->where('update_date', '>', $lastUpdateAt);
+        }
 
         $self = $this;
         $total = $query->count();
@@ -24,7 +42,7 @@ class MlsIndex extends Command
                 $self->processRow($row);
                 $self->processMessageOutput($total);
             }
-        });
+        });*/
     }
 
     public function processRow(& $row)
@@ -154,6 +172,9 @@ class MlsIndex extends Command
             },
             'is_online_abled' => function($d) {
                 return in_array(array_get($d, 'status'), ['ACT','NEW','BOM','PCG','RAC','EXT']);
+            },
+            'update_at' => function ($d) {
+                return array_get($d, 'update_date');
             },
             'index_at' => function () {
                 return date('Y-m-d H:i:s');

@@ -14,10 +14,22 @@ class ListhubIndex extends Command
 
         $query = app('db')->connection('pgsql2')
             ->table('mls_rets_listhub')
-            ->select('list_no', 'state', 'prop_type', 'xml', 'status', 'latitude', 'longitude', 'last_update_date')
+            ->select('list_no', 'state', 'prop_type', 'status', 'latitude', 'longitude', 'last_update_date')
             ->whereIn('state', ['NY', 'GA', 'CA', 'IL'])
             ->orderBy('list_no');
 
+        $total = $query->count();
+        $self = $this;
+        $query->chunk(1000, function ($rows) use ($self, $total){
+            foreach ($rows as $row) {
+                app('db')->table('house_index_v2')
+                    ->where('list_no', $row->list_no)
+                    ->update(['update_at' => $row->last_update_date]);
+                $self->processMessageOutput($total);
+            }
+            unset($rows);
+        });
+        /*
         $self = $this;
         $total = $query->count();
         $query->chunk(1000, function ($rows) use ($self, $total){
@@ -28,7 +40,7 @@ class ListhubIndex extends Command
             }
             unset($rows);
             sleep(3);
-        });
+        });*/
     }
 
     public function processRow(& $row)
@@ -197,6 +209,9 @@ class ListhubIndex extends Command
             },
             'is_online_abled' => function($d, $row, $result) {
                 return array_get($result, 'status') === 'SLD';
+            },
+            'update_at' => function ($d, $row) {
+                return $row->last_update_date;
             },
             'index_at' => function () {
                 return date('Y-m-d H:i:s');
