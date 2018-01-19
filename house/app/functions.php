@@ -40,6 +40,24 @@ function tt()
         return count($texts) > 1 ? $texts[1] : $texts[1];
 }
 
+function array_mult_merge()
+{
+    $args = func_get_args();
+    $res = array_shift($args);
+    while (!empty($args)) {
+        $next = array_shift($args);
+        foreach ($next as $k => $v) {
+            if (is_array($v) && isset($res[$k]) && is_array($res[$k])) {
+                $res[$k] = array_mult_merge($res[$k], $v);
+            } else {
+                $res[$k] = $v;
+            }
+        }
+    }
+
+    return $res;
+}
+
 function xml_get($xml, $path)
 {
     $element = $xml->xpath($path);

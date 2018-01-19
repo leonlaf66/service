@@ -14,9 +14,9 @@ class HouseField
     {
         $value = null;
 
-        $opt = array_merge(config('house.mls.fields.'.$name, []), $opt);
+        $opt = array_mult_merge(config('house.mls.fields.'.$name, []), $opt);
         if (is_chinese() && isset($opt['zh-CN'])) {
-            $opt = array_merge($opt, $opt['zh-CN']);
+            $opt = array_mult_merge($opt, $opt['zh-CN']);
         }
 
         $houseEntity = $house->entity->data;
@@ -68,9 +68,9 @@ class HouseField
             'value' => $this->getValue($house, $name, $opt)
         ];
 
-        $opt = array_merge(config('house.mls.fields.'.$name, []), $opt);
+        $opt = array_mult_merge(config('house.mls.fields.'.$name, []), $opt);
         if (is_chinese() && isset($opt['zh-CN'])) {
-            $opt = array_merge($opt, $opt['zh-CN']);
+            $opt = array_mult_merge($opt, $opt['zh-CN']);
         }
 
         // 未提供值处理
@@ -141,6 +141,7 @@ class HouseField
                 }
 
                 $fieldResult = $this->getEntity($house, $name, $opts);
+
                 if (!isset($fieldResult ['is_empty'])) {
                     unset($fieldResult['is_empty']);
                     $arrGroup['items'][$name] = $fieldResult;
