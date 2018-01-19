@@ -177,7 +177,7 @@
     ],
     'no_living_levels' => [
         'zh-CN' => [
-            'title' => '',
+            'title' => 'Number of Living Levels',
         ]
     ],
     'cc_type' => [
@@ -260,17 +260,17 @@
     ],
     'total_rent' => [
         'zh-CN' => [
-            'title' => '',
+            'title' => '租金总额',
         ]
     ],
     'mf_type' => [
         'zh-CN' => [
-            'title' => '',
+            'title' => '多家庭类型',
         ]
     ],
     'levels' => [
         'zh-CN' => [
-            'title' => '',
+            'title' => '楼层数',
         ]
     ],
     'space_available' => [
