@@ -20,6 +20,7 @@ class HouseNearbiy
             ->addSelect(DB::raw("abs(list_price - {$price}) as diff_price"))
             ->where('area_id', area_id())
             ->where('city_id', $cityId)
+            ->where('list_no', '<>', $houseId)
             ->orderBy('diff_price', 'ASC');
 
         if (in_array($propTypeId, ['SF', 'CC'])) {
