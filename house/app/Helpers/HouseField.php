@@ -63,6 +63,7 @@ class HouseField
                     ]);
                 }
                 break;
+            case 'price.per.sq-ft':
             case 'money/sq.ft':
                 if (intval($data['value']) === 0) {
                     $data['is_empty'] = true;
