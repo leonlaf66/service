@@ -1,5 +1,6 @@
 <?php return [
     'lot_size' => [
+        'format' => 'sq.ft',
         'zh-CN' => [
             'title' => '占地面积'
         ]
@@ -30,6 +31,7 @@
         ]
     ],
     'list_date' => [
+        'format' => 'date',
         'zh-CN' => [
             'title' => '上市时间',
         ]
@@ -40,6 +42,7 @@
         ]
     ],
     'orig_price' => [
+        'format' => 'money',
         'zh-CN' => [
             'title' => '上市价格',
         ]
@@ -105,11 +108,13 @@
         ]
     ],
     'sec_deposit' => [
+        'format' => 'money',
         'zh-CN' => [
             'title' => '押金额',
         ]
     ],
     'first_mon_reqd' => [
+        'format' => 'money',
         'zh-CN' => [
             'title' => '首月房租',
         ]
@@ -135,6 +140,7 @@
         ]
     ],
     'condo_association' => [
+        'format' => 'money',
         'zh-CN' => [
             'title' => '物业费',
         ]
@@ -210,6 +216,7 @@
         ]
     ],
     'hoa_fee' => [
+        'format' => 'money',
         'zh-CN' => [
             'title' => '物业费',
         ]
@@ -225,6 +232,7 @@
         ]
     ],
     'list_price_per_sqft' => [
+        'format' => 'sq.ft/money',
         'zh-CN' => [
             'title' => '均价（每平方米）',
         ]
@@ -240,6 +248,7 @@
         ]
     ],
     'assessments' => [
+        'format' => 'money',
         'zh-CN' => [
             'title' => '政府评估价',
         ]
@@ -275,11 +284,13 @@
         ]
     ],
     'square_feet' => [
+        'format' => 'sq.ft',
         'zh-CN' => [
             'title' => '面积',
         ]
     ],
     'total_bldg_sf' => [
+        'format' => 'sq.ft',
         'zh-CN' => [
             'title' => '大楼总面积',
         ]
@@ -320,31 +331,37 @@
         ]
     ],
     'maf_bldg_sf' => [
+        'format' => 'sq.ft',
         'zh-CN' => [
             'title' => '厂房面积',
         ]
     ],
     'off_bldg_sf' => [
+        'format' => 'sq.ft',
         'zh-CN' => [
             'title' => '办公室面积',
         ]
     ],
     'ref_bldg_sf' => [
+        'format' => 'sq.ft',
         'zh-CN' => [
             'title' => '商铺面积',
         ]
     ],
     'rsf_bldg_sf' => [
+        'format' => 'sq.ft',
         'zh-CN' => [
             'title' => '住宅面积',
         ]
     ],
     'waf_bldg_sf' => [
+        'format' => 'sq.ft',
         'zh-CN' => [
             'title' => '仓库面积',
         ]
     ],
     'total_assessed_value' => [
+        'format' => 'money',
         'zh-CN' => [
             'title' => '评估价',
         ]
@@ -365,6 +382,7 @@
         ]
     ],
     'bldg_sq_feet' => [
+        'format' => 'sq.ft',
         'zh-CN' => [
             'title' => '大楼面积',
         ]
