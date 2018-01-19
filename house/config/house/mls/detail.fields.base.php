@@ -114,7 +114,6 @@
         ]
     ],
     'first_mon_reqd' => [
-        'format' => 'money',
         'zh-CN' => [
             'title' => '首月房租',
         ]
@@ -259,6 +258,7 @@
         ]
     ],
     'total_rent' => [
+        'format' => 'money',
         'zh-CN' => [
             'title' => '租金总额',
         ]
