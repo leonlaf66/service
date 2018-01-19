@@ -22,6 +22,7 @@ class HouseField
             case 'datetime':
                 $data['value'] = date('Y-m-d H:i', strtotime($data['value']));
                 break;
+            case 'price':
             case 'rental.total.price':
             case 'sell.total.price':
             case 'money':
