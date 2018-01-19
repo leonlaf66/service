@@ -113,7 +113,9 @@ class HouseField
         $xml = simplexml_load_string("<groups>{$xmlContent}</groups>");
         $groups = $xml->xpath('/groups/group');
         foreach($groups as $group) {
-            if (!$group->title_cn) $group->title_cn = $group->title;
+            if (!$group->title_cn && is_chinese() && $group->title && count($group->title) > 0) {
+                $group->title_cn = $this->matchGroupTitleLang((string)$group->title[0]);
+            }
             $arrGroup = [
                 'title' => tt((string)$group->title, (string)$group->title_cn),
                 'items' => []
@@ -154,6 +156,24 @@ class HouseField
         }
 
         return $arrGroups;
+    }
+
+    public function matchGroupTitleLang($name)
+    {
+        static $langs = [];
+        if (empty($langs)) {
+            $langs = [
+                'Property Information' => '基本信息',
+                'Commercial Details' => '物业明细',
+                'Market Information' => '市场信息',
+                'Other Property Information' => '其他信息',
+                'Rental Information' => '出租信息',
+                'General Information' => '基本资料',
+                'Additional Features' => '附加设施',
+                'Complex and Association Information' => '更多明细',
+            ];
+        }
+        return $langs[$name] ?? $name;
     }
 
     /**
