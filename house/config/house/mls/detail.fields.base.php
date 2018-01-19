@@ -176,7 +176,7 @@
     ],
     'no_living_levels' => [
         'zh-CN' => [
-            'title' => 'Number of Living Levels',
+            'title' => '大楼总层数',
         ]
     ],
     'cc_type' => [
