@@ -232,7 +232,7 @@
         ]
     ],
     'list_price_per_sqft' => [
-        'format' => 'sq.ft/money',
+        'format' => 'money/sq.ft',
         'zh-CN' => [
             'title' => '均价（每平方米）',
         ]
