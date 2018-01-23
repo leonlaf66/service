@@ -23,7 +23,7 @@ class HouseGet
             'area' => $house->getFieldValue('area'),
             'status' => $house->status,
             'l_days' => $house->getFieldValue('list_days'),
-            'latlon' => $house->getFieldValue('latlon'),
+            'latlng' => d_field_toarr($house->latlng),
             'img_cnt' => $house->getFieldValue('photo_count'),
             'taxes' => $house->getFieldValue('taxes'),
             'roi' => $house->getFieldValue('roi'),

@@ -103,14 +103,14 @@ class MlsIndex extends Command
             'prop_type' => function ($d) {
                 return array_get($d, 'prop_type');
             },
-            'latlon' => function ($d) {
+            'latlng' => function ($d) {
                 $lat = array_get($d, 'latitude');
                 $lon = array_get($d, 'longitude');
                 if ($lat && $lon) {
                     return "{{$lat}, {$lon}}";
                 }
             },
-            'latlon_rad' => function ($d) {
+            'latlng_rad' => function ($d) {
                 $lat = array_get($d, 'latitude');
                 $lon = array_get($d, 'longitude');
 

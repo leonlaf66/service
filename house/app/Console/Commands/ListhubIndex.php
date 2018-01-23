@@ -117,14 +117,14 @@ class ListhubIndex extends Command
 
                 return get_listhub_prop_type($propTypeName, $propSubTypeName);
             },
-            'latlon' => function ($d, $row) {
+            'latlng' => function ($d, $row) {
                 $lat = object_get($row, 'latitude');
                 $lon = object_get($row, 'longitude');
                 if ($lat && $lon) {
                     return "{{$lat}, {$lon}}";
                 }
             },
-            'latlon_rad' => function ($d, $row) {
+            'latlng_rad' => function ($d, $row) {
                 $lat = object_get($row, 'latitude');
                 $lon = object_get($row, 'longitude');
 

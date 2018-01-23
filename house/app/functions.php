@@ -88,6 +88,14 @@ function get_listhub_prop_type($propType, $propSubType)
     }
 }
 
+function d_field_toarr($d)
+{
+   if (empty($d)) {
+       return [];
+   }
+   return explode(',', trim($d, '{}'));
+}
+
 function get_house_adapter($name, $areaId = null)
 {
     if (!$areaId) $areaId = area_id();
