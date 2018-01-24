@@ -12,7 +12,7 @@ class SupportController extends Controller
     public function banners()
     {
         return response()->json(
-            get_static_data('news-banners/'.area_id(), [])
+            app('App\Repositories\Banner')->all(area_id())
         );
     }
 
