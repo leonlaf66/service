@@ -15,7 +15,7 @@ class Banner
         $items = $config['childrens'] ?? [];
 
         return array_map(function ($item) {
-            $item['news_id'] = trim($item['url'], '#');
+            $item['news_id'] = intval(trim($item['url'], '#'));
             unset($item['url']);
             return $item;
         }, $items);
