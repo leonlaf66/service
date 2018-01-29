@@ -127,4 +127,51 @@ class HouseIndex extends Model
         $typePath = $this->area_id === 'ma' ? 'Mls' : 'Listhub';
         return app("App\Repositories\\{$typePath}\\{$name}");
     }
+
+    /**
+     * 指定用户是否收藏
+     * @param $userId
+     * @return mixed
+     */
+    public function hasLike($userId)
+    {
+        return app('db')->table('house_member_favority')
+            ->where('user_id', $userId)
+            ->where('list_no', $this->list_no)
+            ->exists();
+    }
+
+    /**
+     * 添加收藏
+     * @param $userId
+     * @return bool
+     */
+    public function addLike($userId)
+    {
+        if ($this->hasLike($userId)) {
+            return false;
+        }
+
+        return app('db')->table('house_member_favority')
+            ->insert([
+                'user_id' => $userId,
+                'list_no' => $this->list_no,
+                'property_type' => $this->prop_type,
+                'created_at' => date('Y-m-d H:i:s'),
+                'area_id' => $this->area_id
+            ]);
+    }
+
+    /**
+     * 取消收藏
+     * @param $userId
+     * @return mixed
+     */
+    public function removeLike ($userId)
+    {
+        return app('db')->table('house_member_favority')
+            ->where('user_id', $userId)
+            ->where('list_no', $this->list_no)
+            ->delete();
+    }
 }

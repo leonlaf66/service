@@ -3,11 +3,12 @@ namespace App\Repositories;
 
 class HouseGet
 {
-    public function get($id)
+    public function get($id, $userId)
     {
         $house = \App\Models\HouseIndex::findOrFail($id);
 
         $subTypeName = strtolower($house->prop_type).'_type';
+        $liked = false;
 
         return [
             'id' => $house->list_no,
@@ -28,6 +29,7 @@ class HouseGet
             'taxes' => $house->getFieldValue('taxes'),
             'roi' => $house->getFieldValue('roi'),
             'details' => $house->getDetails(),
+            'liked' => $userId ? $house->hasLike($userId) : false,
             'mls_id' => $house->getFieldValue('mls_id')
         ];
     }

@@ -112,3 +112,4 @@ function get_static_data($name)
 function media_url($url) {
     return env('MEDIA_BASE_URL').'/'.$url;
 }
+

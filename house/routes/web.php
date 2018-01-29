@@ -20,6 +20,11 @@ $router->get('/areas/', [
     'uses' => 'AreaController@all'
 ]);
 
+$router->get('/house/list-by-ids', [
+    'as' => 'house-list-by-ids',
+    'uses' => 'HouseController@listByIds'
+]);
+
 $router->get('/house/search', [
     'as' => 'house-search',
     'uses' => 'HouseController@search'
@@ -49,3 +54,17 @@ $router->get('/house/{id}/nearbiy', [
     'as' => 'house-nearbiy',
     'uses' => 'HouseController@nearbiy'
 ]);
+
+$router->get('/house/{id}/like', [
+    'as' => 'house-like',
+    'uses' => 'HouseController@like'
+]);
+
+$router->post('/house/{id}/tour', [
+    'as' => 'house-tour',
+    'uses' => 'HouseTourController@submit'
+]);
+
+$router->options('/house/{id}/tour', function () {
+    echo 'ok';
+});

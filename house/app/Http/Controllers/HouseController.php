@@ -22,6 +22,34 @@ class HouseController extends Controller
         return response()->json($results);
     }
 
+    public function listByIds(Request $req)
+    {
+        $ids = $req->input('ids');
+
+        $query = \App\Models\HouseIndex::query();
+        $query->whereIn('list_no', $ids);
+
+        $houseCollec = $query->get();
+        return $houseCollec->map(function ($d) {
+            return [
+                'id' => $d->list_no,
+                'nm' => $d->getFieldValue('name'),
+                'loc' => $d->getFieldValue('location'),
+                'beds' => $d->no_beds,
+                'baths' => $d->no_baths,
+                'square' => $d->square_feet,
+                'lot_size' => $d->lot_size,
+                'price' => $d->list_price,
+                'prop' => $d->prop_type,
+                'status' => $d->status,
+                'l_days' => intval((time() - strtotime($d->list_date)) / 86400),
+                'tags' => $d->getFieldValue('tags'),
+                'mls_id' => $d->getFieldValue('mls_id'),
+                'area_id' => $d->area_id
+            ];
+        });
+    }
+
     public function mapSearch(Request $req)
     {
         $params = array_merge([
@@ -43,10 +71,32 @@ class HouseController extends Controller
         if ($req->get('simple') === '1') {
             $results = $houseGet->getSimple($id);
         } else {
-            $results = $houseGet->get($id);
+            $userId = $req->user() ? $req->user()->id : null;
+            $results = $houseGet->get($id, $userId);
         }
 
         return response()->json($results);
+    }
+
+    public function like(Request $req, $id)
+    {
+        $result = false;
+        $status = $req->get('status'); // 1 or 0
+        if ($req->user()) {
+            $house = \App\Models\HouseIndex::findOrFail($id);
+            if ($house) {
+                $userId = $req->user()->id;
+                if ($status === '1') {
+                    if (!$house->hasLike($userId)) {
+                        $result = $house->addLike($userId);
+                    }
+                } else {
+                    $result = $house->removeLike($userId);
+                }
+            }
+        }
+
+        return response()->json($result);
     }
 
     public function nearbiy($id)
