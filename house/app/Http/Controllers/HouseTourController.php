@@ -13,16 +13,31 @@ class HouseTourController extends Controller
 
         $house = \App\Models\HouseIndex::findOrFail($id);
 
-        $data = [
-            'user_id' => $req->user()->id,
-            'list_no' => $id,
-            'date_start' => $day.' '.$timeStart.':00',
-            'date_end' => $day.' '.$timeEnd.':00',
-            'status' => 0,
-            'area_id' => $house->area_id
-        ];
+        $oldId = app('db')->table('house_member_tour')
+            ->select('id')
+            ->where('user_id', $req->user()->id)
+            ->where('list_no', $id)
+            ->where('status', 0)
+            ->value('id');
 
-        $result = app('db')->table('house_member_tour')->insert($data);
+        $result = false;
+        if ($oldId) {
+            $result = app('db')->table('house_member_tour')
+                ->where('id', $oldId)
+                ->update([
+                    'date_start' => $day.' '.$timeStart.':00',
+                    'date_end' => $day.' '.$timeEnd.':00'
+                ]);
+        } else {
+            $result = app('db')->table('house_member_tour')->insert([
+                'user_id' => $req->user()->id,
+                'list_no' => $id,
+                'date_start' => $day.' '.$timeStart.':00',
+                'date_end' => $day.' '.$timeEnd.':00',
+                'status' => 0,
+                'area_id' => $house->area_id
+            ]);
+        }
 
         return response()->json($result);
     }

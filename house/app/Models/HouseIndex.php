@@ -128,6 +128,29 @@ class HouseIndex extends Model
         return app("App\Repositories\\{$typePath}\\{$name}");
     }
 
+    public function getTour($userId, $status = null)
+    {
+        $query = app('db')->table('house_member_tour')
+            ->select('id', 'date_start', 'date_end', 'status')
+            ->where('user_id', $userId)
+            ->where('list_no', $this->list_no);
+
+        if (!is_null($status)) {
+            $query->where('status', $status);
+        }
+
+        $data = $query->first();
+
+        if (!$data) return false;
+        return [
+            'id' => $data->id,
+            'day' => date('Y-m-d', strtotime($data->date_start)),
+            'time_from' => date('H:i', strtotime($data->date_start)),
+            'time_to' => date('H:i', strtotime($data->date_end)),
+            'confirmed' => $data->status === 1
+        ];
+    }
+
     /**
      * 指定用户是否收藏
      * @param $userId

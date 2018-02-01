@@ -9,6 +9,7 @@ class HouseGet
 
         $subTypeName = strtolower($house->prop_type).'_type';
         $liked = false;
+        $tour = [];
 
         return [
             'id' => $house->list_no,
@@ -30,6 +31,7 @@ class HouseGet
             'roi' => $house->getFieldValue('roi'),
             'details' => $house->getDetails(),
             'liked' => $userId ? $house->hasLike($userId) : false,
+            'tour' => $userId ? $house->getTour($userId, 0) : false,
             'mls_id' => $house->getFieldValue('mls_id')
         ];
     }
