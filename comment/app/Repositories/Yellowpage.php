@@ -13,6 +13,10 @@ class Yellowpage
             ->where('page_id', $pageId)
             ->sum('rating');
 
+        if ($comments === 0) {
+            return false;
+        }
+
         $rating = round($totalRating * 1.0 / $comments, 0);
 
         $ypid = explode('/', $path)[1];
