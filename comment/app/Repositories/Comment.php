@@ -33,10 +33,6 @@ class Comment
                 ]);
         }
 
-        if ($pageId) {
-            app('App\Repositories\Yellowpage')->flashSummery($pageId, $path);
-        }
-
         $data = [
             'page_id' => $pageId,
             'rating' => intval($rating),
@@ -46,6 +42,10 @@ class Comment
         ];
         $commentId = app('db')->table('comment')
             ->insertGetId($data);
+
+        if ($commentId) {
+            app('App\Repositories\Yellowpage')->flashSummery($pageId, $path);
+        }
 
         return [
             'id' => $commentId,
