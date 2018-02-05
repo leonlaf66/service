@@ -74,6 +74,8 @@ class ListhubIndex extends Command
             $table->insert($addiData);
         }
 
+        $this->processCases($listNo, $xmlDoc, $row); // 缺失数据汇报给listhub官方
+
         unset($addiData);
         unset($indexData);
     }
@@ -222,6 +224,59 @@ class ListhubIndex extends Command
 
         $current ++;
         $this->output->write("{$current}/{$total}\r");
+    }
+
+    // 缺失数据汇报给listhub官方
+    public function processCases($listNo, $d, $row)
+    {
+        static $configs = [];
+        if (empty($configs)) {
+            $configs = [
+                'ListPrice' => 'ListPrice',
+                'Address/City' => 'City',
+                'ListingDate' => 'ListingDate',
+                'Bedrooms' => 'Bedrooms',
+                'LivingArea' => '!LD:LivingArea',
+                'LotSize' => 'LD:LotSize',
+                'Address/PostalCode' => 'PostalCode'
+            ];
+        }
+
+        $propTypeName = get_xml_text($d, 'PropertyType');
+        $propSubTypeName = get_xml_text($d, 'PropertySubType');
+        $propTypeCode = get_listhub_prop_type($propTypeName, $propSubTypeName);
+
+        $data = [
+            'list_no' => $listNo,
+            'prop_type' => $propTypeCode,
+            'unkowns' => [],
+            'updated_at' => $row->last_update_date
+        ];
+
+        foreach ($configs as $xmlPath => $fieldKey) {
+            if (is_null(get_xml_text($d, $xmlPath))) {
+                if (strpos($fieldKey, ':') !== false) {
+                    $exps = explode(':', $fieldKey);
+                    $ruld = $exps[0];
+                    $fieldKey = $exps[1];
+                    if ($ruld === '!'.$propTypeCode) {
+                        continue;
+                    }
+                    if ($ruld !== $propTypeCode) {
+                        continue;
+                    }
+                }
+                $data['unkowns'][] = $fieldKey;
+            }
+        }
+
+        if (empty($data['unkowns'])) {
+            return false;
+        }
+
+        $data['unkowns'] = '{'.implode(',', $data['unkowns']).'}';
+
+        app('db')->table('listhub_cases')->insert($data);
     }
 
     public function processXml($xml)
