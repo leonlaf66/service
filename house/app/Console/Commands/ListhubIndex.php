@@ -235,7 +235,7 @@ class ListhubIndex extends Command
                 'ListPrice' => 'ListPrice',
                 'Address/City' => 'City',
                 'ListingDate' => 'ListingDate',
-                'Bedrooms' => 'Bedrooms',
+                'Bedrooms' => '!LD:Bedrooms',
                 'LivingArea' => '!LD:LivingArea',
                 'LotSize' => 'LD:LotSize',
                 'Address/PostalCode' => 'PostalCode'
