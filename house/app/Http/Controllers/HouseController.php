@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
+use Uljx\Helpers\FieldRender;
 
 class HouseController extends Controller
 {
@@ -17,7 +18,12 @@ class HouseController extends Controller
             'order' => ['list_date', 'desc']
         ], $req->all());
 
-        $results = app('App\Repositories\HouseGeneralSearch')->search($params);
+        $outFields = $req->get('fields', 'id, nm, loc, beds, baths, square, lot_size, price, prop,status, l_days, tags, mls_id');
+
+        $results = app('App\Repositories\HouseGeneralSearch')->search($params, function ($d) use ($outFields) {
+            $fieldRules = \Uljx\House\FieldRules::parse();
+            return \Uljx\House\FieldRender::process($outFields, $fieldRules, $d);
+        });
 
         return response()->json($results);
     }
@@ -25,28 +31,15 @@ class HouseController extends Controller
     public function listByIds(Request $req)
     {
         $ids = $req->input('ids');
+        $outFields = $req->get('fields', 'id, nm, loc, beds, baths, square, lot_size, price, prop, status, l_days, tags, mls_id, area_id');
 
         $query = \App\Models\HouseIndex::query();
         $query->whereIn('list_no', $ids);
 
-        $houseCollec = $query->get();
-        return $houseCollec->map(function ($d) {
-            return [
-                'id' => $d->list_no,
-                'nm' => $d->getFieldValue('name'),
-                'loc' => $d->getFieldValue('location'),
-                'beds' => $d->no_beds,
-                'baths' => $d->no_baths,
-                'square' => $d->square_feet,
-                'lot_size' => $d->lot_size,
-                'price' => $d->list_price,
-                'prop' => $d->prop_type,
-                'status' => $d->status,
-                'l_days' => intval((time() - strtotime($d->list_date)) / 86400),
-                'tags' => $d->getFieldValue('tags'),
-                'mls_id' => $d->getFieldValue('mls_id'),
-                'area_id' => $d->area_id
-            ];
+        $collec = $query->get();
+        return $collec->map(function ($d) use ($outFields) {
+            $fieldRules = \Uljx\House\FieldRules::parse();
+            return \Uljx\House\FieldRender::process($outFields, $fieldRules, $d);
         });
     }
 
@@ -58,22 +51,41 @@ class HouseController extends Controller
             'filters' => []
         ], $req->all());
 
-        $results = app('App\Repositories\HouseMapSearch')->search($params);
+        $results = app('App\Repositories\HouseMapSearch')->search($params, function ($d) {
+            return implode('|', [
+                $d->list_no,
+                $d->prop_type,
+                $d->list_price * 1.0 / 10000,
+                $d->latlon ? substr($d->latlon, 1, strlen($d->latlon) - 2) : ''
+            ]);
+        });
 
         return response()->json($results);
     }
 
     public function get(Request $req, $id)
     {
-        $results = null;
-
-        $houseGet = app('App\Repositories\HouseGet');
-        if ($req->get('simple') === '1') {
-            $results = $houseGet->getSimple($id);
-        } else {
-            $userId = $req->user() ? $req->user()->id : null;
-            $results = $houseGet->get($id, $userId);
+        $defFields = 'id, nm, loc, price, prop, sub_tnm, beds, baths, square, lot_size, area, status,
+                      l_days, latlng, img_cnt, taxes, roi, details, liked, tour, mls_id';
+        if ($req->get('simple', '0') === '1') {
+            $defFields = 'id, nm, loc, price, prop, beds, baths, square, status, l_days, mls_id';
         }
+
+        $outFields = $req->get('fields', $defFields);
+
+        $userId = $req->user() ? $req->user()->id : null;
+
+        $fieldRuels = \Uljx\House\FieldRules::parse([
+            'liked' => function ($d) use ($userId) {
+                return $userId ? $d->hasLike($userId) : false;
+            },
+            'tour' => function ($d) use($userId) {
+                return $userId ? $d->getTour($userId, 0) : false;
+            }
+        ]);
+
+        $house = \App\Models\HouseIndex::findOrFail($id);
+        $results = \Uljx\House\FieldRender::process($outFields,$fieldRuels, $house);
 
         return response()->json($results);
     }
@@ -99,11 +111,17 @@ class HouseController extends Controller
         return response()->json($result);
     }
 
-    public function nearbiy($id)
+    public function nearbiy(Request $req, $id)
     {
-        return response()->json(
-            app('App\Repositories\HouseNearbiy')->all($id, 10)
-        );
+        $outFields = $req->get('fields', 'id, nm, loc, beds, baths, square, price, prop, status, l_days, tags, mls_id');
+
+        $collec = app('App\Repositories\HouseNearbiy')->all($id, 10);
+        $results = $collec->map(function ($d) use ($outFields) {
+            $fieldRules = \Uljx\House\FieldRules::parse();
+            return \Uljx\House\FieldRender::process($outFields, $fieldRules, $d);
+        });
+
+        return response()->json($results);
     }
 
     public function searchOptions($type)
@@ -130,9 +148,18 @@ class HouseController extends Controller
         });
     }
 
-    public function top()
+    public function top(Request $req)
     {
-        $results = app('App\Repositories\HouseTop')->all(area_id());
+        $areaId = area_id();
+        $outFields = $req->get('fields', 'id, nm, loc, beds, baths, square, lot_size, price, prop, status, l_days, tags, mls_id');
+
+        $collec = $results = app('App\Repositories\HouseTop')->all($areaId);
+
+        $results = $collec->map(function ($d) use ($outFields) {
+            $fieldRules = \Uljx\House\FieldRules::parse();
+            return \Uljx\House\FieldRender::process($outFields, $fieldRules, $d);
+        });
+
         return response()->json($results);
     }
 }

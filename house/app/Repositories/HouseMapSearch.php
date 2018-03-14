@@ -3,7 +3,7 @@ namespace App\Repositories;
 
 class HouseMapSearch extends HouseSearchAbstract
 {
-    public function search($params)
+    public function search($params, $itemCallback)
     {
         $query = app('db')->table('house_index_v2')
             ->select('list_no', 'list_price', 'prop_type', 'latlon');
@@ -35,14 +35,8 @@ class HouseMapSearch extends HouseSearchAbstract
         $query->orderBy('list_no', 'ASC');
         $query->limit($params['limit']);
 
-        return $query->get()->map(function ($item) {
-            return implode('|', [
-                $item->list_no,
-                $item->prop_type,
-                $item->list_price * 1.0 / 10000,
-                $item->latlon ? substr($item->latlon, 1, strlen($item->latlon) - 2) : ''
-            ]);
-            return 2;
+        return $query->get()->map(function ($item) use ($itemCallback) {
+            return $itemCallback($item);
         });
     }
 }

@@ -31,23 +31,6 @@ class HouseNearbiy
         $query->where('list_no', '<>', $id);
         $query->take($limit);
 
-        $houses = $query->get();
-
-        return $houses->map(function ($d) {
-            return [
-                'id' => $d->list_no,
-                'nm' => $d->getFieldValue('name'),
-                'loc' => $d->getFieldValue('location'),
-                'beds' => $d->no_beds,
-                'baths' => $d->no_baths,
-                'square' => $d->square_feet,
-                'price' => $d->list_price,
-                'prop' => $d->prop_type,
-                'status' => $d->status,
-                'l_days' => intval((time() - strtotime($d->list_date)) / 86400),
-                'tags' => $d->getFieldValue('tags'),
-                'mls_id' => $d->getFieldValue('mls_id')
-            ];
-        });
+        return $query->get();
     }
 }

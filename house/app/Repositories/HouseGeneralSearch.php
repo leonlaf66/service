@@ -3,7 +3,7 @@ namespace App\Repositories;
 
 class HouseGeneralSearch extends HouseSearchAbstract
 {
-    public function search($params)
+    public function search($params, $callback)
     {
         $query = \App\Models\HouseIndex::query();
 
@@ -75,9 +75,10 @@ class HouseGeneralSearch extends HouseSearchAbstract
         }
         $query->orderBy('list_no', 'desc');
 
-        return \App\Helpers\Pager::load($query, $params['page'], $params['page_size'], function ($collection) {
-            return $collection->map(function ($item) {
-                return [
+        return \App\Helpers\Pager::load($query, $params['page'], $params['page_size'], function ($collection) use ($callback) {
+            return $collection->map(function ($item) use ($callback) {
+                return $callback($item);
+                /* return [
                     'id' => $item->list_no,
                     'nm' => $item->getFieldValue('name'),
                     'loc' => $item->getFieldValue('location'),
@@ -91,7 +92,7 @@ class HouseGeneralSearch extends HouseSearchAbstract
                     'l_days' => intval((time() - strtotime($item->list_date)) / 86400),
                     'tags' => $item->getFieldValue('tags'),
                     'mls_id' => $item->getFieldValue('mls_id')
-                ];
+                ]; */
             });
         });
     }
