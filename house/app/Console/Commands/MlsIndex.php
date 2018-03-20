@@ -14,7 +14,7 @@ class MlsIndex extends Command
 
         $query = app('db')->connection('pgsql2')
             ->table('mls_rets')
-            ->select('update_date', 'json_data')
+            ->select('update_date', 'est_sale', 'estimation', 'json_data')
             ->orderBy('list_no');
 
         if ($mode === 'new') {
