@@ -14,10 +14,6 @@ class HouseRoi
             $estimation->est_roi = number_format($estimation->est_roi, 4);
         }
 
-        if ($estimation->est_rental) {
-            $estimation->est_rental *= 12;
-        }
-
         $data = [
             'est_roi_cash' => $estimation->est_roi,
             'ave_roi_cash' => null,
