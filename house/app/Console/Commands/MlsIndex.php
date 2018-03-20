@@ -163,10 +163,10 @@ class MlsIndex extends Command
             },
             'estimation' => function ($d, $row) {
                 if (!$row->estimation) $row->estimation = '{}';
-                $data = array_merge(json_decode([
+                $data = array_merge([
                     'est_rental' => null,
                     'est_roi' => null
-                ], $row->estimation));
+                ], json_decode($row->estimation, true));
                 if ($data['est_rental']) {
                     $data['est_rental'] *= 12;
                 }
