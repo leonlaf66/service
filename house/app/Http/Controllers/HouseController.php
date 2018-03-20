@@ -66,7 +66,7 @@ class HouseController extends Controller
     public function get(Request $req, $id)
     {
         $defFields = 'id, nm, loc, price, prop, sub_tnm, beds, baths, square, lot_size, area, status,
-                      l_days, latlng, img_cnt, taxes, roi, details, liked, tour, mls_id';
+                      l_days, latlng, img_cnt, est_sale, taxes, roi, details, liked, tour, mls_id';
         if ($req->get('simple', '0') === '1') {
             $defFields = 'id, nm, loc, price, prop, beds, baths, square, status, l_days, mls_id';
         }

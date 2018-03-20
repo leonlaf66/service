@@ -65,6 +65,12 @@ return [
             return intval((time() - strtotime($m->list_date)) / 86400);
         }
     ],
+    'est_sale' => [
+        'title' => tt('UStamite', '米乐居估价'),
+        'value' => function ($d, $m) {
+            return $m->est_sale;
+        }
+    ],
     'status_name' => [
         'title' => tt('Status', '标题'),
         'value' => function ($d, $m) {
@@ -162,9 +168,7 @@ return [
             return app("App\\Repositories\\{$resType}\\City")->findNameById(state_id(), $m->city_id);
         }
     ],
-    [
-        'roi' => [
-            'title' => tt('Roi', '投资回报率')
-        ]
+    'roi' => [
+        'title' => tt('Roi', '投资回报率')
     ]
 ];

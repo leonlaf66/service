@@ -158,6 +158,23 @@ class MlsIndex extends Command
             'city_id' => function ($d) {
                 return app('App\Repositories\Mls\City')->findIdByCode('MA', array_get($d, 'town'));
             },
+            'est_sale' => function ($d, $row) {
+                return $row['est_sale'];
+            },
+            'estimation' => function ($d, $row) {
+                if (!$row['estimation']) $row['estimation'] = '{}';
+                $data = array_merge(json_decode([
+                    'est_rental' => null,
+                    'est_roi' => null
+                ], $row['estimation']));
+                if ($data['est_rental']) {
+                    $data['est_rental'] *= 12;
+                }
+                if ($data['est_roi']) {
+                    $data['est_roi'] = number_format($data['est_roi'], 4);
+                }
+                return json_encode($data);
+            },
             'area_id' => function () {
                 return 'ma';
             },
