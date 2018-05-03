@@ -12,15 +12,15 @@ class Account
             ->first();
 
         if (!$user) {
-            throw new \Exception('无效的用户或密码!', 404);
+            throw new \App\Exceptions\Handler('无效的用户或密码!', 404);
         }
 
         if (! $user->confirmed_at) {
-            throw new \Exception('未确认的帐号!', 403);
+            throw new \App\Exceptions\Handler('未确认的帐号!', 403);
         }
 
         if ($user->blocked_at) {
-            throw new \Exception('帐户已被锁', 403);
+            throw new \App\Exceptions\Handler('帐户已被锁', 403);
         }
 
         $userId = $user->id;
@@ -59,7 +59,7 @@ class Account
             ->where('email', $userInfo['email'])
             ->exists();
         if ($exists) {
-            throw new \Exception('已存在的用户!', 504);
+            throw new \App\Exceptions\Handler('已存在的用户!', 504);
         }
 
         $key = md5('usleju.'.$userInfo['email']);
@@ -77,7 +77,7 @@ class Account
         ];
         $userId = app('db')->table('member')->insertGetId($userData);
         if (!$userId) {
-            throw new \Exception('注册失败!', 505);
+            throw new \App\Exceptions\Handler('注册失败!', 505);
         }
 
         app('db')->table('member_profile')->insert([
