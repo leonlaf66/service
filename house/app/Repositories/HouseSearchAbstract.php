@@ -37,7 +37,7 @@ abstract class HouseSearchAbstract
                     $q->where('parking', '>', $cnt);
                 }
             ],
-            'marketDays' => [
+            'market-days' => [
                 'apply' => function ($q, $key) {
                     if (! in_array($key, ['1', '2', '3'])) return;
 
@@ -48,6 +48,26 @@ abstract class HouseSearchAbstract
 
                     $q->where('list_date', '>=', $startTime);
                 }
+            ],
+            'city-id' => [
+                'apply' => function ($q, $id) {
+                    $q->where('city_id', $id);
+                }
+            ],
+            'subway-line' => [
+                'apply' => function ($q, $lineId) {
+                    $lineId = intval($lineId);
+                    $q->where('subway_lines', '@>', "{{$lineId}}");
+                }
+            ],
+            'subway-stations' => [
+                'apply' => function ($q, $stationIds) {
+                    $stationIds = array_map(function ($id) {
+                        return intval($id);
+                    }, $stationIds);
+                    $stationIds = '{'.implode(',', $stationIds).'}';
+                    $q->whereRaw("subway_stations && '{{$stationIds}}'");
+                }
             ]
         ];
 
@@ -56,6 +76,10 @@ abstract class HouseSearchAbstract
             return array_merge($base, [
                 'prop' => [
                     'apply' => function ($q, $vals) {
+                        $vals = array_map(function ($v) {
+                            return strtoupper($v);
+                        }, $vals);
+
                         $q->whereIn('prop_type', $vals);
                     }
                 ],
@@ -68,9 +92,22 @@ abstract class HouseSearchAbstract
                         '5' => [200, 99999999]
                     ],
                     'apply' => function ($q, $id, $opts) {
-                        if (!isset($opts[$id])) return;
-                        list($start, $end) = $opts[$id];
-                        $q->whereBetween('list_price', [$start * 10000, $end * 10000]);
+                        $start = 0; $end = 0;
+
+                        if (is_array($id)) { // 定制值
+                            if (count($id) === 0) $id = [0, 0];
+                            if (count($id) === 1) $id[] = 0;
+                            $id[0] = intval($id[0]);
+                            $id[1] = intval($id[1]);
+                            list($start, $end) = $id;
+                        } else {
+                            if (!isset($opts[$id])) return;
+                            list($start, $end) = $opts[$id];
+                            $start *= 10000;
+                            $end *= 10000;
+                        }
+
+                        $q->whereBetween('list_price', [$start, $end]);
                     }
                 ],
                 'agrage' => [
@@ -92,8 +129,20 @@ abstract class HouseSearchAbstract
                     '4' => [2000, 99999999999]
                 ],
                 'apply' => function ($q, $id, $opts) {
-                    if (!isset($opts[$id])) return;
-                    $q->whereBetween('list_price', $opts[$id]);
+                    $start = 0; $end = 0;
+
+                    if (is_array($id)) { // 定制值
+                        if (count($id) === 0) $id = [0, 0];
+                        if (count($id) === 1) $id[] = 0;
+                        $id[0] = intval($id[0]);
+                        $id[1] = intval($id[1]);
+                        list($start, $end) = $id;
+                    } else {
+                        if (!isset($opts[$id])) return;
+                        list($start, $end) = $opts[$id];
+                    }
+
+                    $q->whereBetween('list_price', [$start, $end]);
                 }
             ]
         ]);

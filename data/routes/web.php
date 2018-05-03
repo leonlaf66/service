@@ -1,5 +1,8 @@
 <?php
 $router->get('/listhub/deficiency/{field}', function (\Illuminate\Http\Request $req, $field) {
+    redirect('/listhub/deficiency/');
+});
+$router->get('/listhub/deficiency/', function (\Illuminate\Http\Request $req) {
     $day = $req->get('day');
 
     $startDay = date('Y-m-d');
@@ -11,7 +14,6 @@ $router->get('/listhub/deficiency/{field}', function (\Illuminate\Http\Request $
     return app('db')->table('listhub_cases')
         ->where('updated_at', '>=', $startDay.' 00:00:00')
         ->where('updated_at', '<', $endDay . ' 00:00:00')
-        ->whereRaw("unkowns @> '{".$field."}'")
         ->get()
         ->map(function ($d) {
             return $d->list_no;

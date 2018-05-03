@@ -13,12 +13,12 @@ class HouseController extends Controller
         $params = array_merge([
             'type' => 'purchase',
             'page' => 1,
-            'page_size' => 15,
+            'page_size' => 10,
             'filters' => [],
             'order' => ['list_date', 'desc']
         ], $req->all());
 
-        $outFields = $req->get('fields', 'id, nm, loc, beds, baths, square, lot_size, price, prop,status, l_days, tags, mls_id');
+        $outFields = $req->get('fields', 'id, nm, loc, beds, baths, square, lot_size, price, prop,status, l_days, tags, mls_id, area_id');
 
         $results = app('App\Repositories\HouseGeneralSearch')->search($params, function ($d) use ($outFields) {
             $fieldRules = \Uljx\House\FieldRules::parse();
@@ -67,6 +67,7 @@ class HouseController extends Controller
     {
         $defFields = 'id, nm, loc, price, prop, sub_tnm, beds, baths, square, lot_size, area, status,
                       l_days, latlng, img_cnt, est_sale, taxes, roi, details, liked, tour, mls_id';
+
         if ($req->get('simple', '0') === '1') {
             $defFields = 'id, nm, loc, price, prop, beds, baths, square, status, l_days, mls_id';
         }
@@ -81,11 +82,25 @@ class HouseController extends Controller
             },
             'tour' => function ($d) use($userId) {
                 return $userId ? $d->getTour($userId, 0) : false;
+            },
+            'recommends' => function ($d) use ($req) {
+                $recommendsOptions = $req->get('recommends_options', []);
+                $outFields = array_get($recommendsOptions, 'fields', 'id, nm, loc, beds, baths, square, lot_size, price, prop, status, l_days, tags, area_id, mls_id');
+                $limit = array_get($recommendsOptions, 'limit', 10);
+
+                $collec = app('App\Repositories\HouseNearbiy')->all($d->list_no, $limit);
+                return $collec->map(function ($d) use ($outFields) {
+                    $fieldRules = \Uljx\House\FieldRules::parse();
+                    return \Uljx\House\FieldRender::process($outFields, $fieldRules, $d);
+                });
+            },
+            'polygons' => function ($d) {
+                return $d->getFieldValue('polygons');
             }
         ]);
 
         $house = \App\Models\HouseIndex::findOrFail($id);
-        $results = \Uljx\House\FieldRender::process($outFields,$fieldRuels, $house);
+        $results = \Uljx\House\FieldRender::process($outFields, $fieldRuels, $house);
 
         return response()->json($results);
     }

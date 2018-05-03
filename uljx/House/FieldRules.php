@@ -34,7 +34,7 @@ class FieldRules
             'details' => function ($d) {
                 return $d->getDetails();
             },
-            'mls_id' => '@mls_id',
+            'mls_id' => '@mls_id'
         ], $maps);
     }
 }

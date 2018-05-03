@@ -121,10 +121,28 @@ class MlsIndex extends Command
                 }
             },
             'subway_lines' => function ($d) {
-                return '{}';
+                $lat = array_get($d, 'latitude');
+                $lon = array_get($d, 'longitude');
+
+                $subwayLineIds = [];
+                if ($lat && $lon) {
+                    $subwayLineIds = \App\Helpers\SubwayGeo::getMatchedLines($lon, $lat, 1);
+                }
+                $subwayLineIds = implode(',', $subwayLineIds);
+
+                return "{{$subwayLineIds}}";
             },
             'subway_stations' => function ($d) {
-                return '{}';
+                $lat = array_get($d, 'latitude');
+                $lon = array_get($d, 'longitude');
+
+                $subwayStationIds = [];
+                if ($lat && $lon) {
+                    $subwayStationIds = \App\Helpers\SubwayGeo::getMatchedStations($lon, $lat, 1);
+                }
+                $subwayStationIds = implode(',', $subwayStationIds);
+
+                return "{{$subwayStationIds}}";
             },
             'sale_price' => function ($d) {
                 return array_get($d, 'sale_price');

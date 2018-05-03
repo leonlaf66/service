@@ -74,7 +74,7 @@ class ListhubIndex extends Command
             $table->insert($addiData);
         }
 
-        $this->processCases($listNo, $xmlDoc, $row); // 缺失数据汇报给listhub官方
+        $this->processCases($xmlDoc, $row); // 缺失数据汇报给listhub官方
 
         unset($addiData);
         unset($indexData);
@@ -227,7 +227,7 @@ class ListhubIndex extends Command
     }
 
     // 缺失数据汇报给listhub官方
-    public function processCases($listNo, $d, $row)
+    public function processCases($d, $row)
     {
         static $configs = [];
         if (empty($configs)) {
@@ -247,7 +247,7 @@ class ListhubIndex extends Command
         $propTypeCode = get_listhub_prop_type($propTypeName, $propSubTypeName);
 
         $data = [
-            'list_no' => $listNo,
+            'list_no' => get_xml_text($d, 'ListingKey'),
             'prop_type' => $propTypeCode,
             'unkowns' => [],
             'updated_at' => $row->last_update_date

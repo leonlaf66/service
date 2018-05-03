@@ -77,5 +77,5 @@ return array_mult_merge(include(__DIR__.'/mls/detail.fields.base.php'), [
         'value' => function ($d, $m) {
             return app('App\Repositories\Mls\HouseRoi')->getResults($m);
         }
-    ]
+    ],
 ]);

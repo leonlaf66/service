@@ -3,8 +3,7 @@ $fieldBase = include(__DIR__.'/house/fields.base.php');
 
 return [
     'mls' => [
-        'fields' => array_merge($fieldBase, include(__DIR__.'/house/fields.mls.php')
-        ),
+        'fields' => array_merge($fieldBase, include(__DIR__.'/house/fields.mls.php')),
     ],
     'listhub' => [
         'fields' => array_merge($fieldBase, include(__DIR__.'/house/fields.listhub.php')),

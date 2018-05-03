@@ -170,5 +170,19 @@ return [
     ],
     'roi' => [
         'title' => tt('Roi', '投资回报率')
+    ],
+    'polygons' => [
+        'title' => 'City Polygons',
+        'value' => function ($d, $m) {
+            if (!$m->city_id) return [];
+            $cityName = null;
+            if ($m->area_id === 'ma') {
+                $cityName = app('db')->table('town')->select('name')->where('id', $m->city_id)->value('name');
+                $cityName = str_replace(' ', '-', $cityName);
+                $cityName = strtolower($cityName);
+                return get_static_data('polygons/'.strtoupper($m->area_id).'/'.$cityName);
+            }
+            return [];
+        }
     ]
 ];

@@ -78,21 +78,6 @@ class HouseGeneralSearch extends HouseSearchAbstract
         return \App\Helpers\Pager::load($query, $params['page'], $params['page_size'], function ($collection) use ($callback) {
             return $collection->map(function ($item) use ($callback) {
                 return $callback($item);
-                /* return [
-                    'id' => $item->list_no,
-                    'nm' => $item->getFieldValue('name'),
-                    'loc' => $item->getFieldValue('location'),
-                    'beds' => $item->no_beds,
-                    'baths' => $item->no_baths,
-                    'square' => $item->square_feet,
-                    'lot_size' => $item->lot_size,
-                    'price' => $item->list_price,
-                    'prop' => $item->prop_type,
-                    'status' => $item->status,
-                    'l_days' => intval((time() - strtotime($item->list_date)) / 86400),
-                    'tags' => $item->getFieldValue('tags'),
-                    'mls_id' => $item->getFieldValue('mls_id')
-                ]; */
             });
         });
     }

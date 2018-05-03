@@ -16,6 +16,6 @@ class AreaController extends Controller
 
     public function hots()
     {
-
+        
     }
 }
