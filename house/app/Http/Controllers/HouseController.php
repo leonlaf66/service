@@ -180,17 +180,19 @@ class HouseController extends Controller
 
     public function source($id)
     {
-        $results = [];
+        $results = null;
         if (is_numeric($id)) {
             $results = app('db')->connection('pgsql2')
                 ->table('mls_rets')
                 ->select('list_no', 'prop_type', 'status', 'update_date')
                 ->where(['list_no' => $id])
                 ->first();
-            $results->area_id = 'ma';
+            if ($results) {
+                $results->area_id = 'ma';
+            }
         }
         
-        if (empty($results)) {
+        if (!$results) {
             $results = app('db')->connection('pgsql2')
                 ->table('mls_rets_listhub')
                 ->select('list_no', 'state', 'status', 'last_update_date')
