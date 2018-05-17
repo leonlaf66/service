@@ -184,9 +184,10 @@ class HouseController extends Controller
         if (is_numeric($id)) {
             $results = app('db')->connection('pgsql2')
                 ->table('mls_rets')
-                ->select('list_no', 'prop_type', 'status', 'update_date', 'area_id')
+                ->select('list_no', 'prop_type', 'status', 'update_date')
                 ->where(['list_no' => $id])
                 ->first();
+            $results->area_id = 'ma';
         }
         
         if (empty($results)) {
