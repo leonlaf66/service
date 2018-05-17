@@ -65,6 +65,11 @@ $router->post('/house/{id}/tour', [
     'uses' => 'HouseTourController@submit'
 ]);
 
+$router->get('/house/{id}/source', [
+    'as' => 'house-source',
+    'uses' => 'HouseController@source'
+]);
+
 $router->options('/house/{id}/tour', function () {
     echo 'ok';
 });

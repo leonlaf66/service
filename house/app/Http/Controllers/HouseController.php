@@ -177,4 +177,26 @@ class HouseController extends Controller
 
         return response()->json($results);
     }
+
+    public function source($id)
+    {
+        $results = [];
+        if (is_numeric($id)) {
+            $results = app('db')->connection('pgsql2')
+                ->table('mls_rets')
+                ->select('list_no', 'prop_type', 'status', 'update_date', 'area_id')
+                ->where(['list_no' => $id])
+                ->first();
+        }
+        
+        if (empty($results)) {
+            $results = app('db')->connection('pgsql2')
+                ->table('mls_rets_listhub')
+                ->select('list_no', 'state', 'status', 'last_update_date')
+                ->where(['list_no' => $id])
+                ->first();
+        }
+
+        return response()->json($results);
+    }
 }
