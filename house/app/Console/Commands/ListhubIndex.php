@@ -242,6 +242,11 @@ class ListhubIndex extends Command
             ];
         }
 
+        $listNo = get_xml_text($d, 'ListingKey');
+        if (app('db')->table('listhub_cases')->where('list_no', $listNo)->exists()) {
+            return false;
+        }
+
         $propTypeName = get_xml_text($d, 'PropertyType');
         $propSubTypeName = get_xml_text($d, 'PropertySubType');
         $propTypeCode = get_listhub_prop_type($propTypeName, $propSubTypeName);
