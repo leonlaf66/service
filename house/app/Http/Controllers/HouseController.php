@@ -15,7 +15,7 @@ class HouseController extends Controller
             'page' => 1,
             'page_size' => 10,
             'filters' => [],
-            'order' => ['list_date', 'desc']
+            'order' => ['ldays', 'desc']
         ], $req->all());
 
         $outFields = $req->get('fields', 'id, nm, loc, beds, baths, square, lot_size, price, prop,status, l_days, tags, mls_id, area_id');
