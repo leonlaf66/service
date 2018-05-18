@@ -10,7 +10,7 @@ class ListhubIndex extends Command
 
     public function handle()
     {
-        $mode  = $this->argument('mode');
+        $mode  = $this->argument('mode', 'new');
 
         $query = app('db')->connection('pgsql2')
             ->table('mls_rets_listhub')
