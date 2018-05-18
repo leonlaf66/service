@@ -176,6 +176,9 @@ class MlsIndex extends Command
             'city_id' => function ($d) {
                 return app('App\Repositories\Mls\City')->findIdByCode('MA', array_get($d, 'town'));
             },
+            'city_code' => function ($d) {
+                return array_get($d, 'town');
+            },
             'est_sale' => function ($d, $row) {
                 return $row->est_sale;
             },
