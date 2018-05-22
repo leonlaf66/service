@@ -34,7 +34,7 @@ abstract class HouseSearchAbstract
             'parking' => [
                 'apply' => function ($q, $cnt) {
                     $cnt = intval($cnt);
-                    $q->where('parking', '>', $cnt);
+                    $q->where('parking_spaces', '>', $cnt);
                 }
             ],
             'market-days' => [
