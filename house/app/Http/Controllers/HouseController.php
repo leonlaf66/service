@@ -20,8 +20,13 @@ class HouseController extends Controller
 
         $outFields = $req->get('fields', 'id, nm, loc, beds, baths, square, lot_size, price, prop,status, l_days, tags, mls_id, area_id');
 
-        $results = app('App\Repositories\HouseGeneralSearch')->search($params, function ($d) use ($outFields) {
-            $fieldRules = \Uljx\House\FieldRules::parse();
+        $userId = $req->user() ? $req->user()->id : null;
+        $results = app('App\Repositories\HouseGeneralSearch')->search($params, function ($d) use ($userId, $outFields) {
+            $fieldRules = \Uljx\House\FieldRules::parse([
+                'liked' => function ($d) use ($userId) {
+                    return $userId ? $d->hasLike($userId) : false;
+                }
+            ]);
             return \Uljx\House\FieldRender::process($outFields, $fieldRules, $d);
         });
 
