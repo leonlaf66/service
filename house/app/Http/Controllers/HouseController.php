@@ -18,7 +18,7 @@ class HouseController extends Controller
             'order' => ['ldays', 'desc']
         ], $req->all());
 
-        $outFields = $req->get('fields', 'id, nm, loc, beds, baths, square, lot_size, price, prop,status, l_days, tags, mls_id, area_id');
+        $outFields = $req->get('fields', 'id, nm, loc, beds, baths, square, lot_size, price, prop,status, l_days, tags, mls_id, area_id, liked');
 
         $userId = $req->user() ? $req->user()->id : null;
         $results = app('App\Repositories\HouseGeneralSearch')->search($params, function ($d) use ($userId, $outFields) {
