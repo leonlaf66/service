@@ -56,7 +56,7 @@ class MlsIndex extends Command
         }
 
         // 主数据表
-        $table = app('db')->table('house_data');
+        $table = app('db')->table('house_data_v2');
         $indexData = [
             'list_no' => array_get($indexData, 'list_no'),
             'mls_data' => object_get($row, 'json_data')

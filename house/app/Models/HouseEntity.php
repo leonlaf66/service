@@ -12,7 +12,7 @@ class HouseEntity extends Model
 
     public function getTable()
     {
-        return 'house_data';
+        return 'house_data_v2';
     }
 
     public function getDataAttribute()

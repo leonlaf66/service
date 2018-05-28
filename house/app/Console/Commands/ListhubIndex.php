@@ -63,7 +63,7 @@ class ListhubIndex extends Command
         }
 
         // 附数据
-        $table = app('db')->table('house_data');
+        $table = app('db')->table('house_data_v2');
         $addiData = [
             'list_no' => array_get($indexData, 'list_no'),
             'listhub_data' => $xmlString
