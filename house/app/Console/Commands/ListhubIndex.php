@@ -38,6 +38,9 @@ class ListhubIndex extends Command
             unset($rows);
             sleep(3);
         });
+
+        app('db')->connection('pgsql2')->disconnect();
+        app('db')->disconnect();
     }
 
     public function processRow(& $row)
@@ -63,18 +66,18 @@ class ListhubIndex extends Command
         }
 
         // 附数据
-        /*
-        $table = app('db')->table('house_data_v2');
-        $addiData = [
-            'list_no' => array_get($indexData, 'list_no'),
-            'listhub_data' => $xmlString
-        ];
+        $table = app('db')->table('house_data');
+
         if ($table->where('list_no', $listNo)->count() > 0) {
-            $table->where('list_no', $listNo)->update($addiData);
+            $table->where('list_no', $listNo)->update([
+                'orgi_data' => $xmlString
+            ]);
         } else {
-            $table->insert($addiData);
+            $table->insert([
+                'list_no' => array_get($indexData, 'list_no'),
+                'orgi_data' => $xmlString
+            ]);
         }
-        */
 
         $this->processCases($xmlDoc, $row); // 缺失数据汇报给listhub官方
 

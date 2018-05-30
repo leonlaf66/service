@@ -15,6 +15,7 @@ class Kernel extends ConsoleKernel
     protected $commands = [
         \App\Console\Commands\MlsIndex::class,
         \App\Console\Commands\ListhubIndex::class,
+        \App\Console\Commands\FlashHouseData::class,
         \App\Console\Commands\Summary::class
     ];
 
