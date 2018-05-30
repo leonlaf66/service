@@ -3,7 +3,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class HouseEntity extends Model
+class HouseEntity2 extends Model
 {
     public $primaryKey = 'list_no';
     public $incrementing = false;
@@ -36,13 +36,14 @@ class HouseEntity extends Model
     }*/
     public function getTable()
     {
-        return 'mls_rets';
+        return 'mls_rets_listhub';
     }
 
     public function getDataAttribute()
     {
         if (is_null($this->data)) {
-            $this->data = json_decode($this->json_data, true);
+            $xml = '<?xml version="1.0" encoding="UTF-8"?>'.$this->xml;
+            $this->data = @ simplexml_load_string($xml);
         }
 
         return $this->data;

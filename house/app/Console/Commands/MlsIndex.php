@@ -56,6 +56,7 @@ class MlsIndex extends Command
         }
 
         // 主数据表
+        /*
         $table = app('db')->table('house_data_v2');
         $indexData = [
             'list_no' => array_get($indexData, 'list_no'),
@@ -65,7 +66,7 @@ class MlsIndex extends Command
             $table->where('list_no', $listNo)->update($indexData);
         } else {
             $table->insert($indexData);
-        }
+        }*/
     }
 
     public function getFieldMaps()

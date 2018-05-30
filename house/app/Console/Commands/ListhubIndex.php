@@ -63,6 +63,7 @@ class ListhubIndex extends Command
         }
 
         // 附数据
+        /*
         $table = app('db')->table('house_data_v2');
         $addiData = [
             'list_no' => array_get($indexData, 'list_no'),
@@ -73,6 +74,7 @@ class ListhubIndex extends Command
         } else {
             $table->insert($addiData);
         }
+        */
 
         $this->processCases($xmlDoc, $row); // 缺失数据汇报给listhub官方
 
