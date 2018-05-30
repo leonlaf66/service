@@ -10,7 +10,6 @@ class FlashHouseData extends Command
 
     protected $db;
     protected $db2;
-    protected $toTable;
     protected $total = 0;
     protected $index = 0;
 
@@ -19,7 +18,6 @@ class FlashHouseData extends Command
         // init
         $this->db = app('db');
         $this->db2 = app('db')->connection('pgsql2');
-        $this->toTable = $this->db->table('house_data');
 
         $this->mlsData();
         $this->listhubData();
@@ -62,7 +60,7 @@ class FlashHouseData extends Command
 
     public function flashTo($listNo, $orgiData)
     {
-        // $table = app('db')->table('house_data');
+        $table = $this->db->table('house_data');
 
         if ($table->where('list_no', $listNo)->exists()) {
             /*
@@ -70,7 +68,7 @@ class FlashHouseData extends Command
                 'orgi_data' => $orgiData
             ]);*/
         } else {
-            $this->toTable->insert([
+            $table->insert([
                 'list_no' => $listNo,
                 'orgi_data' => $orgiData
             ]);
