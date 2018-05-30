@@ -42,7 +42,15 @@ class HouseEntity2 extends Model
     public function getDataAttribute()
     {
         if (is_null($this->data)) {
-            $xml = '<?xml version="1.0" encoding="UTF-8"?>'.$this->xml;
+            $xml = $this->xml;
+            
+            $clearTags = [' xmlns="http://rets.org/xsd/Syndication/2012-03" xmlns:commons="http://rets.org/xsd/RETSCommons"', 'commons:'];
+            foreach ($clearTags as $clearTag) {
+                if (false !== strpos($xml, $clearTag)) {
+                    $xml = str_replace($clearTag, '', $xml);
+                }
+            }
+            $xml = '<?xml version="1.0" encoding="UTF-8"?>'.$xml;
             $this->data = @ simplexml_load_string($xml);
         }
 
