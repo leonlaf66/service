@@ -19,7 +19,7 @@ class HouseField
             $opt = array_mult_merge($opt, $opt['zh-CN']);
         }
 
-        $houseEntity = $house->entity->data;
+        $houseEntity = $house->getDataEntity();
         if (isset($opt['value']) && get_class($opt['value']) === 'Closure') {
             $value = ($opt['value'])($houseEntity, $house);
         } elseif (isset($opt['index'])) {
