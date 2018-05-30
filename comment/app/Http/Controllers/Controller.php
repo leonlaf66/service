@@ -6,5 +6,10 @@ use Laravel\Lumen\Routing\Controller as BaseController;
 
 class Controller extends BaseController
 {
-    //
+    public function getMiddlewareForMethod($method)
+    {
+        $middleware = parent::getMiddlewareForMethod($method);
+        $middleware[] = '\App\Http\Middleware\EndMiddleware';
+        return $middleware;
+    }
 }
