@@ -106,6 +106,7 @@ function get_house_adapter($name, $areaId = null)
 function get_static_data($name)
 {
     $file = base_path('data').'/'.$name.'.php';
+    if (!file_exists($file)) return [];
     return include($file);
 }
 
