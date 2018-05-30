@@ -11,13 +11,15 @@ class FlashHouseData extends Command
     protected $db;
     protected $db2;
     protected $toTable;
+    protected $total = 0;
+    protected $index = 0;
 
     public function handle()
     {
         // init
         $this->db = app('db');
         $this->db2 = app('db')->connection('pgsql2');
-        $this->toTable = $this->db->table('house_data')
+        $this->toTable = $this->db->table('house_data');
 
         $this->mlsData();
         $this->listhubData();
@@ -29,6 +31,8 @@ class FlashHouseData extends Command
     public function mlsData ()
     {
         $self = $this;
+
+        $this->total = $this->db2->table('mls_rets')->count();
 
         $query = $this->db2->table('mls_rets')
             ->select('list_no', 'json_data')
@@ -44,12 +48,14 @@ class FlashHouseData extends Command
     {
         $self = $this;
 
+        $this->total += $this->db2->table('mls_rets_listhub')->count();
+
         $query = $this->db2->table('mls_rets_listhub')
             ->select('list_no', 'xml')
             ->orderBy('list_no')
             ->chunk(10000, function ($rows) use ($self) {
                 foreach ($rows as $row) {
-                    $self->flashTo($row->list_no, $row->xml);
+                    $self->flashTo($row->list_no, $self->processXml($row->xml));
                 }
             });
     }
@@ -58,16 +64,30 @@ class FlashHouseData extends Command
     {
         // $table = app('db')->table('house_data');
 
-        //if ($table->where('list_no', $listNo)->exists()) {
+        if ($table->where('list_no', $listNo)->exists()) {
             /*
             $table->where('list_no', $listNo)->update([
                 'orgi_data' => $orgiData
             ]);*/
-        //} else {
+        } else {
             $this->toTable->insert([
                 'list_no' => $listNo,
                 'orgi_data' => $orgiData
             ]);
-        //}
+        }
+
+        $this->index ++;
+        echo "{$this->index}/{$this->total}       \r";
+    }
+
+    public function processXml($xml)
+    {
+        $clearTags = [' xmlns="http://rets.org/xsd/Syndication/2012-03" xmlns:commons="http://rets.org/xsd/RETSCommons"', 'commons:'];
+        foreach ($clearTags as $clearTag) {
+            if (false !== strpos($xml, $clearTag)) {
+                $xml = str_replace($clearTag, '', $xml);
+            }
+        }
+        return '<?xml version="1.0" encoding="UTF-8"?>'.$xml;
     }
 }
