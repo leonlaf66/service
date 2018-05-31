@@ -91,7 +91,11 @@ $router->get('/db-monitor/Us22695Jk', function () {
 
     $content = str_replace('    ', '  ', $content);
 
-    echo $content;
+    $content = '<pre>'.$content.'</pre>';
+
+    DB::disconnect();
+    echo response($content);
+    exit;
 });
 
 $router->options('/house/{id}/tour', function () {
