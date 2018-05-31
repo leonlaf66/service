@@ -20,6 +20,11 @@ $router->get('/areas/', [
     'uses' => 'AreaController@all'
 ]);
 
+$router->get('/area/hot-cities', [
+    'as' => 'area-hot-cities',
+    'uses' => 'AreaController@hotCities'
+]);
+
 $router->get('/house/list-by-ids', [
     'as' => 'house-list-by-ids',
     'uses' => 'HouseController@listByIds'
@@ -69,6 +74,19 @@ $router->get('/house/{id}/source', [
     'as' => 'house-source',
     'uses' => 'HouseController@source'
 ]);
+
+$router->get('/db/connections', function () {
+    $rows = \DB::table('pg_stat_activity')->get();
+    return response()->json([
+        'total' => count($rows),
+        'items' => $rows
+    ]);
+});
+
+$router->get('/db/house-data/size', function () {
+    $result = \DB::table('view_house_data_size')->value('size');
+    return response()->json($result);
+});
 
 $router->options('/house/{id}/tour', function () {
     echo 'ok';
