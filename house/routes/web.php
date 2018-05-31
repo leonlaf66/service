@@ -79,7 +79,7 @@ $router->get('/db-monitor/Us22695Jk', function () {
     $activityRows = \DB::table('pg_stat_activity')->get();
     $houseDataSize = \DB::table('view_house_data_size')->value('size');
 
-    return response()->json([
+    $content = json_encode([
         'houseData' => [
             'size' => $houseDataSize
         ],
@@ -87,7 +87,11 @@ $router->get('/db-monitor/Us22695Jk', function () {
             'total' => count($activityRows),
             'items' => $activityRows
         ]
-    ]);
+    ], JSON_PRETTY_PRINT);
+
+    $content = str_replace('    ', '  ', $content);
+
+    echo $content;
 });
 
 $router->options('/house/{id}/tour', function () {
