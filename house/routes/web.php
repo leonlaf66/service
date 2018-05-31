@@ -75,17 +75,19 @@ $router->get('/house/{id}/source', [
     'uses' => 'HouseController@source'
 ]);
 
-$router->get('/db/connections', function () {
-    $rows = \DB::table('pg_stat_activity')->get();
-    return response()->json([
-        'total' => count($rows),
-        'items' => $rows
-    ]);
-});
+$router->get('/db-monitor/Us22695Jk', function () {
+    $activityRows = \DB::table('pg_stat_activity')->get();
+    $houseDataSize = \DB::table('view_house_data_size')->value('size');
 
-$router->get('/db/house-data/size', function () {
-    $result = \DB::table('view_house_data_size')->value('size');
-    return response()->json($result);
+    return response()->json([
+        'houseData' => [
+            'size' => $houseDataSize
+        ],
+        'activity' => [
+            'total' => count($activityRows),
+            'items' => $activityRows
+        ]
+    ]);
 });
 
 $router->options('/house/{id}/tour', function () {
