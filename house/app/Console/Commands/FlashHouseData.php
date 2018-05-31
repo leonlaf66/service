@@ -1,6 +1,7 @@
 <?php
 namespace App\Console\Commands;
 
+use DB;
 use Illuminate\Console\Command;
 
 class FlashHouseData extends Command
@@ -8,7 +9,6 @@ class FlashHouseData extends Command
     protected $signature = 'flash-house-data';
     protected $description = '刷新house-data数据, 仅用于手工执行';
 
-    protected $db;
     protected $db2;
     protected $total = 0;
     protected $index = 0;
@@ -16,14 +16,13 @@ class FlashHouseData extends Command
     public function handle()
     {
         // init
-        $this->db = app('db');
-        $this->db2 = app('db')->connection('pgsql2');
+        $this->db2 = DB::connection('pgsql2');
 
         $this->mlsData();
         $this->listhubData();
 
-        app('db')->connection('pgsql2')->disconnect();
-        app('db')->disconnect();
+        DB::connection('pgsql2')->disconnect();
+        DB::disconnect();
     }
 
     public function mlsData ()
@@ -60,13 +59,12 @@ class FlashHouseData extends Command
 
     public function flashTo($listNo, $orgiData)
     {
-        $table = $this->db->table('house_data');
+        $table = DB::table('house_data');
 
         if ($table->where('list_no', $listNo)->exists()) {
-            /*
             $table->where('list_no', $listNo)->update([
                 'orgi_data' => $orgiData
-            ]);*/
+            ]);
         } else {
             $table->insert([
                 'list_no' => $listNo,
