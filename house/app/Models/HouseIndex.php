@@ -25,11 +25,7 @@ class HouseIndex extends Model
      */
     public function entity()
     {
-        if (area_id() === 'ma') {
-            return $this->hasOne('App\Models\HouseEntity', 'list_no', 'list_no')->select(['json_data']);
-        }
-
-        return $this->hasOne('App\Models\HouseEntity2', 'list_no', 'list_no')->select(['xml']);
+        return $this->hasOne('App\Models\HouseEntity', 'list_no', 'list_no');
     }
 
     public function getDataEntity()
@@ -57,7 +53,7 @@ class HouseIndex extends Model
             }
         }
         $xml = '<?xml version="1.0" encoding="UTF-8"?>'.$xml;
-        
+
         return @ simplexml_load_string($xml);
     }
 
