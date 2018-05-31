@@ -20,7 +20,7 @@ class ListhubIndex extends Command
 
         if ($mode === 'new') {
             $lastUpdateAt = app('db')->table('house_index_v2')
-                ->whereIn('area_id', ['NY', 'GA', 'CA', 'IL'])
+                ->whereIn('area_id', ['ny', 'ga', 'ca', 'il'])
                 ->max('update_at');
             if ($lastUpdateAt) {
                 $query->where('last_update_date', '>', $lastUpdateAt);
