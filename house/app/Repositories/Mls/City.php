@@ -3,22 +3,25 @@ namespace App\Repositories\Mls;
 
 class City
 {
-    public function findNameById($state, $id)
+    public function findNameById($state, $id, $isOrig = false)
     {
         static $cache = [];
+        $cacheKey = $state.($isOrig ? '1' : '0');
 
-        if (!isset($cache[$state])) {
+        if (!isset($cache[$cacheKey])) {
             $items = app('db')->table('town')->select('id', 'name', 'name_cn')->get();
             foreach ($items as $item) {
                 $_id = $item->id;
-                $cache[$state][$_id] = $item->name;
-                if (is_chinese() && $item->name_cn) {
-                    $cache[$state][$_id] = $item->name_cn;
+                $cache[$cacheKey][$_id] = $item->name;
+                if (false === $isOrig) {
+                    if (is_chinese() && $item->name_cn) {
+                        $cache[$cacheKey][$_id] = $item->name_cn;
+                    }
                 }
             }
         }
 
-        return $cache[$state][$id] ?? '';
+        return $cache[$cacheKey][$id] ?? '';
     }
 
     public function findIdByName($state, $name)

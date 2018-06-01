@@ -21,14 +21,14 @@ return array_mult_merge(include(__DIR__.'/mls/detail.fields.base.php'), [
                     $value .= ', ';
                 }
                 if($field == 'town') {
-                    $value = app('\App\Repositories\Mls\City')->findIdByCode('MA', array_get($d, 'town'));
+                    $value = app('\App\Repositories\Mls\City')->findNameById('MA', $m->city_id, true);
                 }
                 if($field == 'zip_code'){
                     $value = 'MA '.array_get($d, 'zip_code');
                 }
                 if($value) $result[] = $value;
             }
-
+            
             return implode(' ', $result);
         }
     ],
