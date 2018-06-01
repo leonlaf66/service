@@ -28,6 +28,7 @@ class HouseGeneralSearch extends HouseSearchAbstract
             } elseif (preg_match('/[a-zA-Z]{0,2}[0-9]{5,10}/', $q)) { // 是list_no
                 $query->where('list_no', $q);
             } else { // 当做城市名
+                $q = ucwords(strtolower($q));
                 if ($cityId = get_house_adapter('City')->findIdByName(state_id(), $q)) {
                     if (area_id() === 'ca') {
                         $query->where(function ($query) use ($cityId) {
