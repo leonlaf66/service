@@ -9,6 +9,8 @@ class HouseGeneralSearch extends HouseSearchAbstract
 
         // 区域
         $query->where('area_id', area_id());
+        $query->whereNotNull('prop_type');
+        $query->whereNotNull('city_id');
 
         // 类型
         if ($params['type'] === 'purchase') {

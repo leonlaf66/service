@@ -6,10 +6,12 @@ class HouseMapSearch extends HouseSearchAbstract
     public function search($params, $itemCallback)
     {
         $query = app('db')->table('house_index_v2')
-            ->select('list_no', 'list_price', 'prop_type', 'latlon');
+            ->select('list_no', 'list_price', 'prop_type', 'latlng');
 
         // 区域
         $query->where('area_id', area_id());
+        $query->whereNotNull('prop_type');
+        $query->whereNotNull('city_id');
 
         // 类型
         if ($params['type'] === 'purchase') {
@@ -30,7 +32,7 @@ class HouseMapSearch extends HouseSearchAbstract
 
         // 其它
         $query->where('list_price', '>', 0);
-        $query->whereNotNull('latlon');
+        $query->whereNotNull('latlng');
 
         $query->orderBy('list_no', 'ASC');
         $query->limit($params['limit']);
