@@ -23,6 +23,9 @@ class ListhubIndex extends Command
                 ->whereIn('area_id', ['ny', 'ga', 'ca', 'il'])
                 ->max('update_at');
             if ($lastUpdateAt) {
+                $lastUpdateAt = str_replace('+08', '', $lastUpdateAt);
+                $lastUpdateAt = date('Y-m-d H:i:s.u', strtotime($lastUpdateAt) - 8 * 3600);
+                
                 $query->where('last_update_date', '>', $lastUpdateAt);
             }
         }
@@ -55,6 +58,11 @@ class ListhubIndex extends Command
         }
         unset($fieldMaps);
 
+        if (!$indexData['prop_type'] || !$indexData['city_id']) {
+            unset($indexData);
+            return;
+        }
+
         $listNo = object_get($row, 'list_no');
 
         // 主表
@@ -81,7 +89,6 @@ class ListhubIndex extends Command
 
         $this->processCases($xmlDoc, $row); // 缺失数据汇报给listhub官方
 
-        unset($addiData);
         unset($indexData);
     }
 

@@ -22,6 +22,9 @@ class MlsIndex extends Command
                 ->where('area_id', 'ma')
                 ->max('update_at');
             if ($lastUpdateAt) {
+                $lastUpdateAt = str_replace('+08', '', $lastUpdateAt);
+                $lastUpdateAt = date('Y-m-d H:i:s.u', strtotime($lastUpdateAt) - 8 * 3600);
+                
                 $query->where('update_date', '>', $lastUpdateAt);
             }
         }
