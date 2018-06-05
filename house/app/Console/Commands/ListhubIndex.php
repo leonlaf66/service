@@ -106,7 +106,9 @@ class ListhubIndex extends Command
                 if (!$listDate || strlen($listDate) === 0) {
                     $listDate = $row->last_update_date;
                 }
-                return $listDate;
+                
+                $listDate = str_replace('+00', '', $listDate);
+                return date('Y-m-d H:i:s.u', strtotime($listDate) + 8 * 3600);
             },
             'no_beds' => function ($d) {
                 return get_xml_text($d, 'Bedrooms');
@@ -222,7 +224,9 @@ class ListhubIndex extends Command
                 return array_get($result, 'status') === 'SLD';
             },
             'update_at' => function ($d, $row) {
-                return $row->last_update_date;
+                $lastUpdateAt = $row->last_update_date;
+                $lastUpdateAt = str_replace('+00', '', $lastUpdateAt);
+                return date('Y-m-d H:i:s.u', strtotime($lastUpdateAt) + 8 * 3600);
             },
             'index_at' => function () {
                 return date('Y-m-d H:i:s');

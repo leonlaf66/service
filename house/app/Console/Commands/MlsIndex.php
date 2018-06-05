@@ -24,7 +24,7 @@ class MlsIndex extends Command
             if ($lastUpdateAt) {
                 $lastUpdateAt = str_replace('+08', '', $lastUpdateAt);
                 $lastUpdateAt = date('Y-m-d H:i:s.u', strtotime($lastUpdateAt) - 8 * 3600);
-                
+
                 $query->where('update_date', '>', $lastUpdateAt);
             }
         }
@@ -86,7 +86,9 @@ class MlsIndex extends Command
                 return array_get($d, 'list_price');
             },
             'list_date' => function ($d) {
-                return array_get($d, 'list_date');
+                $listDate = array_get($d, 'list_date');
+                $listDate = str_replace('+00', '', $listDate);
+                return date('Y-m-d H:i:s.u', strtotime($listDate) + 8 * 3600);
             },
             'no_beds' => function ($d) {
                 return array_get($d, 'no_bedrooms');
@@ -211,7 +213,9 @@ class MlsIndex extends Command
                 return in_array(array_get($d, 'status'), ['ACT','NEW','BOM','PCG','RAC','EXT']);
             },
             'update_at' => function ($d, $row) {
-                return $row->update_date;
+                $lastUpdateAt = $row->update_date;
+                $lastUpdateAt = str_replace('+00', '', $lastUpdateAt);
+                return date('Y-m-d H:i:s.u', strtotime($lastUpdateAt) + 8 * 3600);
             },
             'index_at' => function () {
                 return date('Y-m-d H:i:s');
