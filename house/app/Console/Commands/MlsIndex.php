@@ -11,6 +11,9 @@ class MlsIndex extends Command
     public function handle()
     {
         $mode  = $this->argument('mode', 'new');
+        if ($mode === 'v1tov2') {
+            return $this->v1tov2();
+        }
 
         $query = app('db')->connection('pgsql2')
             ->table('mls_rets')
@@ -40,6 +43,40 @@ class MlsIndex extends Command
 
         app('db')->connection('pgsql2')->disconnect();
         app('db')->disconnect();
+    }
+
+    public function v1tov2()
+    {
+        // 所取所有需要转接的listnos
+        $sql = 'select a.id from house_index a
+                  left join house_index_v2 b on a.id::varchar=b.list_no
+                  where b.list_no is null';
+        $sql2 = 'select a.id from listhub_index a
+                  left join house_index_v2 b on a.id=b.list_no
+                  where b.list_no is null';
+
+        $listNos = array_map(function ($row) {
+            return $row->id;
+        }, app('db')->select($sql));
+
+        $listNos2 = array_map(function ($row) {
+            return $row->id;
+        }, app('db')->select($sql2));
+
+        $listNos = array_merge($listNos, $listNos2);
+
+        // 开始处理
+        $total = count($listNos);
+        foreach ($listNos as $listNo) {
+            $row = app('db')->connection('pgsql2')
+                ->table('mls_rets')
+                ->select('update_date', 'est_sale', 'estimation', 'json_data')
+                ->where('list_no', '=', $listNo)
+                ->first();
+
+            $this->processMessageOutput($total);
+            $this->processRow($row);
+        }
     }
 
     public function processRow(& $row)
