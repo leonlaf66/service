@@ -83,6 +83,8 @@ class Summary extends Command
 
         /*log*/
         file_put_contents(__DIR__.'/../log.log', date('Y-m-d H:i:s').' summary'."\n", FILE_APPEND);
+
+        app('db')->disconnect();
     }
 
     public function townSummeries()
@@ -95,6 +97,7 @@ class Summary extends Command
                     ->whereIn('city_code', $cityCodes)
                     ->whereIn('prop_type', ['SF','CC','MF'])
                     ->whereIn('status', ['ACT','NEW','BOM','PCG','RAC','EXT'])
+                    ->where('list_price', '>', 10000)
                     ->avg('list_price');
             },
             // 平均月租
@@ -104,6 +107,7 @@ class Summary extends Command
                     ->whereIn('city_code', $cityCodes)
                     ->where('prop_type', '=', 'RN')
                     ->whereIn('status', ['ACT','NEW','BOM','PCG','RAC','EXT'])
+                    ->where('list_price', '>', 100)
                     ->avg('list_price');
             },
             // 年成交量
@@ -131,6 +135,7 @@ class Summary extends Command
                     ->whereIn('city_code', $cityCodes)
                     ->where('prop_type', '<>', 'RN')
                     ->whereIn('status', ['ACT','NEW','BOM','PCG','RAC','EXT'])
+                    ->where('list_price', '>', 0)
                     ->count();
             },
 
@@ -153,7 +158,7 @@ class Summary extends Command
                     ->where('area_id', '=', $areaId)
                     ->whereIn('prop_type', ['SF','CC','MF'])
                     ->where('status', 'ACT')
-                    ->where('list_price', '>', 0)
+                    ->where('list_price', '>', 10000)
                     ->avg('list_price');
 
                 // 上月已售出平均价格
@@ -161,7 +166,7 @@ class Summary extends Command
                     ->where('area_id', '=', $areaId)
                     ->whereIn('prop_type', ['SF','CC','MF'])
                     ->where('status', '=', 'SLD')
-                    ->where('list_price', '>', 0)
+                    ->where('list_price', '>', 10000)
                     ->whereRaw("ant_sold_date > now() - interval '1 month'")
                     ->avg('list_price');
 
@@ -177,7 +182,7 @@ class Summary extends Command
                     ->where('area_id', '=', $areaId)
                     ->where('prop_type', '<>', 'RN')
                     ->where('status', '=', 'SLD')
-                    ->where('list_price', '>', 0)
+                    ->where('list_price', '>', 10000)
                     ->whereRaw("ant_sold_date > now() - interval '2 month'")
                     ->whereRaw("ant_sold_date < now() - interval '1 month'")
                     ->avg('list_price');
@@ -186,7 +191,7 @@ class Summary extends Command
                 $avgPrice2 = app('db')->table('house_index_v2')
                     ->where('area_id', '=', $areaId)
                     ->where('prop_type', '<>', 'RN')
-                    ->where('list_price', '>', 0)
+                    ->where('list_price', '>', 10000)
                     ->where('status', '=', 'SLD')
                     ->whereRaw("ant_sold_date > now() - interval '1 month'")
                     ->avg('list_price');
@@ -221,6 +226,7 @@ class Summary extends Command
                     ->where('status', '=', 'SLD')
                     ->whereRaw("ant_sold_date > now() - interval '2 month'")
                     ->whereRaw("ant_sold_date < now() - interval '1 month'")
+                    ->where('list_price', '>', 0)
                     ->count();
 
                 // 1个月前
@@ -229,6 +235,7 @@ class Summary extends Command
                     ->where('prop_type', '<>', 'RN')
                     ->where('status', '=', 'SLD')
                     ->whereRaw("ant_sold_date > now() - interval '1 month'")
+                    ->where('list_price', '>', 0)
                     ->count();
 
                 return [
