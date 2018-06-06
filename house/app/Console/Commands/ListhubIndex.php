@@ -11,6 +11,9 @@ class ListhubIndex extends Command
     public function handle()
     {
         $mode  = $this->argument('mode', 'new');
+        if ($mode === 'v1tov2') {
+            return $this->v1tov2();
+        }
 
         $query = app('db')->connection('pgsql2')
             ->table('mls_rets_listhub')
@@ -61,7 +64,7 @@ class ListhubIndex extends Command
         $total = count($listNos);
         foreach ($listNos as $listNo) {
             $row = app('db')->connection('pgsql2')
-                ->table('mls_rets')
+                ->table('mls_rets_listhub')
                 ->select('list_no', 'state', 'prop_type', 'xml', 'status', 'latitude', 'longitude', 'last_update_date')
                 ->where('list_no', '=', $listNo)
                 ->first();
