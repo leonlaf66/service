@@ -254,7 +254,7 @@ class ListhubIndex extends Command
                 return strtolower($row->state);
             },
             'is_online_abled' => function($d, $row, $result) {
-                return array_get($result, 'status') === 'SLD';
+                return array_get($result, 'status') === 'ACT';
             },
             'update_at' => function ($d, $row) {
                 $lastUpdateAt = $row->last_update_date;
