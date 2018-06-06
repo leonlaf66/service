@@ -28,7 +28,7 @@ class MlsIndex extends Command
                 $lastUpdateAt = str_replace('+08', '', $lastUpdateAt);
                 $lastUpdateAt = date('Y-m-d H:i:s.u', strtotime($lastUpdateAt) - 8 * 3600);
 
-                $query->where('update_date', '>', $lastUpdateAt);
+                $query->where('update_date', '>=', $lastUpdateAt);
             }
         }
 
