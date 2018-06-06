@@ -64,6 +64,7 @@ class HouseGeneralSearch extends HouseSearchAbstract
 
         // 其它
         $query->where('list_price', '>', 0);
+        $query->where(['is_online_abled' => true]);
 
         // 排序
         $sortFields = [
