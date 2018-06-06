@@ -51,19 +51,10 @@ class MlsIndex extends Command
         $sql = 'select a.id from house_index a
                   left join house_index_v2 b on a.id::varchar=b.list_no
                   where b.list_no is null';
-        $sql2 = 'select a.id from listhub_index a
-                  left join house_index_v2 b on a.id=b.list_no
-                  where b.list_no is null';
 
         $listNos = array_map(function ($row) {
             return $row->id;
         }, app('db')->select($sql));
-
-        $listNos2 = array_map(function ($row) {
-            return $row->id;
-        }, app('db')->select($sql2));
-
-        $listNos = array_merge($listNos, $listNos2);
 
         // 开始处理
         $total = count($listNos);
@@ -92,6 +83,9 @@ class MlsIndex extends Command
         foreach ($fieldMaps as $field => $callable) {
             $indexData[$field] = $callable($jsonData, $row);
         }
+
+        if (empty($indexData['prop_type'])) return;
+        if (floatval($indexData['list_price']) <= 0) return;
 
         $listNo = array_get($jsonData, 'list_no');
 
