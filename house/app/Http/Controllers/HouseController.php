@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Uljx\Helpers\FieldRender;
@@ -10,12 +11,13 @@ class HouseController extends Controller
 {
     public function search (Request $req)
     {
+        //var_dump(DB::connection('pgsql2'));exit;
         $params = array_merge([
             'type' => 'purchase',
             'page' => 1,
             'page_size' => 10,
             'filters' => [],
-            'order' => ['ldays', 'desc']
+            'sort' => ['ldays', 'desc']
         ], $req->all());
 
         $outFields = $req->get('fields', 'id, nm, loc, beds, baths, square, lot_size, price, prop,status, l_days, tags, mls_id, area_id, liked');
@@ -61,7 +63,7 @@ class HouseController extends Controller
                 $d->list_no,
                 $d->prop_type,
                 $d->list_price * 1.0 / 10000,
-                $d->latlon ? substr($d->latlon, 1, strlen($d->latlon) - 2) : ''
+                $d->latlng ? substr($d->latlng, 1, strlen($d->latlng) - 2) : ''
             ]);
         });
 
@@ -71,13 +73,16 @@ class HouseController extends Controller
     public function get(Request $req, $id)
     {
         $defFields = 'id, nm, loc, price, prop, sub_tnm, beds, baths, square, lot_size, area, status,
-                      l_days, latlng, img_cnt, est_sale, taxes, roi, details, liked, tour, mls_id';
+                      l_days, latlng, img_cnt, est_sale, taxes, roi, details, liked, tour, mls_id, area_id';
 
         if ($req->get('simple', '0') === '1') {
             $defFields = 'id, nm, loc, price, prop, beds, baths, square, status, l_days, mls_id';
         }
 
         $outFields = $req->get('fields', $defFields);
+        if ($addiFields = $req->get('addi_fields')) {
+            $outFields .= ',' . $addiFields;
+        }
 
         $userId = $req->user() ? $req->user()->id : null;
 
@@ -91,6 +96,9 @@ class HouseController extends Controller
             'recommends' => function ($d) use ($req) {
                 $recommendsOptions = $req->get('recommends_options', []);
                 $outFields = array_get($recommendsOptions, 'fields', 'id, nm, loc, beds, baths, square, lot_size, price, prop, status, l_days, tags, area_id, mls_id');
+                if ($addiFields = array_get($recommendsOptions, 'addi_fields')) {
+                    $outFields .= ','.$addiFields;
+                }
                 $limit = array_get($recommendsOptions, 'limit', 10);
 
                 $collec = app('App\Repositories\HouseNearbiy')->all($d->list_no, $limit);
@@ -153,7 +161,7 @@ class HouseController extends Controller
         ]);
 
         // Cache::forget($cacheKey);
-        return Cache::remember($cacheKey, $cacheKey, function () use ($type) {
+        return Cache::remember($cacheKey, 0, function () use ($type) {
             $resType = area_id() === 'ma' ? 'Mls' : 'Listhub';
             $rawOptions = app("App\Repositories\\{$resType}\\City")->searchOptions(state_id(), $type);
             $options = [];
