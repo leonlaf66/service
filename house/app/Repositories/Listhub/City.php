@@ -27,7 +27,7 @@ class City
             ->select('id')
             ->where('state', $state)
             ->where(function ($query) use ($name){
-                return $query->where('name', $name)
+                return $query->where('name', '~*', $name)
                     ->orWhere('name_cn', $name);
             })
             ->orderBy('type_rule', 'ASC')
