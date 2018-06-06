@@ -46,6 +46,36 @@ class ListhubIndex extends Command
         app('db')->disconnect();
     }
 
+    public function v1tov2()
+    {
+        // 所取所有需要转接的listnos
+        $sql = 'select a.id from listhub_index a
+                  left join house_index_v2 b on a.id=b.list_no
+                  where b.list_no is null';
+
+        $listNos = array_map(function ($row) {
+            return $row->id;
+        }, app('db')->select($sql));
+
+        // 开始处理
+        $total = count($listNos);
+        foreach ($listNos as $listNo) {
+            $row = app('db')->connection('pgsql2')
+                ->table('mls_rets')
+                ->select('list_no', 'state', 'prop_type', 'xml', 'status', 'latitude', 'longitude', 'last_update_date')
+                ->where('list_no', '=', $listNo)
+                ->first();
+
+            $this->processMessageOutput($total);
+            if ($row) {
+                $this->processRow($row);
+            }
+        }
+
+        app('db')->connection('pgsql2')->disconnect();
+        app('db')->disconnect();
+    }
+
     public function processRow(& $row)
     {
         $fieldMaps = $this->getFieldMaps();
