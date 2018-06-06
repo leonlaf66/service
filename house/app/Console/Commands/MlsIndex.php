@@ -75,7 +75,9 @@ class MlsIndex extends Command
                 ->first();
 
             $this->processMessageOutput($total);
-            $this->processRow($row);
+            if ($row) {
+                $this->processRow($row);
+            }
         }
 
         app('db')->connection('pgsql2')->disconnect();
