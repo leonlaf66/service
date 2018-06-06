@@ -54,7 +54,7 @@ class ListhubIndex extends Command
         // 所取所有需要转接的listnos
         $sql = 'select a.id from listhub_index a
                   left join house_index_v2 b on a.id=b.list_no
-                  where b.list_no is null';
+                  where a.city_id > 0 and b.list_no is null';
 
         $listNos = array_map(function ($row) {
             return $row->id;
