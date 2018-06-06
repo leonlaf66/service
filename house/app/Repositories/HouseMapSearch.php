@@ -33,6 +33,7 @@ class HouseMapSearch extends HouseSearchAbstract
         // 其它
         $query->where('list_price', '>', 0);
         $query->whereNotNull('latlng');
+        $query->where(['is_online_abled' => true]);
 
         $query->orderBy('list_no', 'ASC');
         $query->limit($params['limit']);
