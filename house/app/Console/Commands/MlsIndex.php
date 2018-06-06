@@ -26,7 +26,7 @@ class MlsIndex extends Command
                 ->max('update_at');
             if ($lastUpdateAt) {
                 $lastUpdateAt = str_replace('+08', '', $lastUpdateAt);
-                $lastUpdateAt = date('Y-m-d H:i:s.u', strtotime($lastUpdateAt) - 8 * 3600);
+                $lastUpdateAt = date('Y-m-d H:i:s', strtotime($lastUpdateAt) - 8 * 3600);
 
                 $query->where('update_date', '>=', $lastUpdateAt);
             }
