@@ -9,7 +9,12 @@ net.createServer(sock => {
 
   sock.setEncoding('utf8');
   sock.on('data', data => {
-    console.log(data);
+    data = JSON.parse(data);
+    sock.write(JSON.stringify({
+      id: data.id,
+      status: true
+    });
+    console.log(data.id);
   });
 
   sock.on('close', data => {
