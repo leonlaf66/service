@@ -8,14 +8,17 @@ net.createServer(sock => {
   sock.setEncoding('utf8');
   sock.on('data', data => {
     try {
+      // 解析数据
       data = JSON.parse(data);
+      // 反馈
       sock.write(JSON.stringify({
         id: data.id,
         status: true
       }) + "\n");
+      //打印输出
       console.log(data.id);
     } catch (e) {
-      console.log(e);
+      console.log('Error: ' + data);
     }
   });
 
