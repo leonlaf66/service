@@ -16,9 +16,6 @@ net.createServer(sock => {
         id: data.id,
         status: true
       });
-
-      //打印输出
-      console.log(data.id);
     } catch (e) {
       console.log('Error: ' + data);
     }
