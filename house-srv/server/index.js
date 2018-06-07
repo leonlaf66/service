@@ -1,5 +1,5 @@
 const net = require('net');
-const config = requre('./config');
+const config = require('./config');
 const HOST = '0';
 const PORT = config.server.port;
 
