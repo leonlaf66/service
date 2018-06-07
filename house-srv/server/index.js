@@ -11,9 +11,6 @@ net.createServer(sock => {
   const connection = new Connection(sock);
   connection.on('message', data => {
     try {
-      // 解析数据
-      data = JSON.parse(data);
-      
       // 反馈
       connection.send({
         id: data.id,
