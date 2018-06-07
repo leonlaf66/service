@@ -7,12 +7,16 @@ var clients = {};
 net.createServer(sock => {
   sock.setEncoding('utf8');
   sock.on('data', data => {
-    data = JSON.parse(data);
-    sock.write(JSON.stringify({
-      id: data.id,
-      status: true
-    }) + "\n");
-    console.log(data.id);
+    try {
+      data = JSON.parse(data);
+      sock.write(JSON.stringify({
+        id: data.id,
+        status: true
+      }) + "\n");
+      console.log(data.id);
+    } catch (e) {
+      console.log(e);
+    }
   });
 
 }).listen(PORT, HOST);
