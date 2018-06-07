@@ -13,7 +13,7 @@ net.createServer(sock => {
     sock.write(JSON.stringify({
       id: data.id,
       status: true
-    });
+    }));
     console.log(data.id);
   });
 
