@@ -5,10 +5,12 @@ $router->get('/listhub/deficiency/{field}', function (\Illuminate\Http\Request $
 $router->get('/listhub/deficiency/', function (\Illuminate\Http\Request $req) {
     $day = $req->get('day');
 
-    $startDay = date('Y-m-d');
-    if ($day) {
-        $startDay = date('Y-m-d', strtotime($day));
+    if (!$day) {
+        $day = app('db')->table('listhub_cases')
+            ->max('updated_at');
     }
+
+    $startDay = date('Y-m-d', strtotime($day));
     $endDay = date('Y-m-d', strtotime($startDay.' +1 day'));
 
     return app('db')->table('listhub_cases')
