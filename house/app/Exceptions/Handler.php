@@ -45,24 +45,35 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $e)
     {
-        /*
+        $code = $e->getCode();
+        $message = $e->getMessage();
+        if (empty($code) && method_exists($e, 'getStatusCode')) {
+            $code = $e->getStatusCode();
+        }
+        if (empty($message) && method_exists($e, 'getStatusMessage')) {
+            $message = $e->getStatusMessage();
+        }
+        if ($message === '') {
+            $message = get_class($e);
+        }
+
         $return = [
-            'code' => $e->getCode(),
-            'message' => $e->getMessage(),
+            'code' => $code,
+            'exception' => get_class($e),
+            'message' => $message,
         ];
 
         if (env('APP_ENV') === 'local') {
             $return['trace'] = array_map(function ($item) {
+                $info = [];
                 if (isset($item['file'])) {
-                    $item['file'] = substr($item['file'], strlen(app()->basePath()));
+                    $info['file'] = substr($item['file'], strlen(app()->basePath()));
+                    $info['line'] = $item['line'];
                 }
-                return $item;
+                return $info;
             }, $e->getTrace());
         }
 
         return response()->json($return);
-        */
-
-        return parent::render($request, $e);
     }
 }

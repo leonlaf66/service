@@ -6,6 +6,12 @@ abstract class HouseSearchAbstract
     protected function getFilterRules($type)
     {
         $base = [
+            'latlon' => [
+                'apply' => function ($q, $vals) {
+                    list($lat, $lon) = explode(',', $vals);
+                    $q->whereRaw('earth_box(ll_to_earth(latlng[1]::double precision, latlng[2]::double precision),2000::double precision) @> ll_to_earth(?, ?)', [$lat, $lon]);
+                }
+            ],
             'square' => [
                 'options' => [
                     '1' => [0, 1000],
@@ -17,6 +23,26 @@ abstract class HouseSearchAbstract
                     if (isset($options[$key])) {
                         $q->whereBetween('square_feet', $opts[$key]);
                     }
+                }
+            ],
+            'square-range' => [
+                'apply' => function ($q, $range) {
+                    list($start, $end) = array_values(array_merge([
+                        'from' => 0,
+                        'to' => 9999999999
+                    ], $range));
+
+                    $q->whereBetween('square_feet', [$start, $end]);
+                }
+            ],
+            'price-range' => [
+                'apply' => function ($q, $range) {
+                    list($start, $end) = array_values(array_merge([
+                        'from' => 0,
+                        'to' => 9999999999
+                    ], $range));
+
+                    $q->whereBetween('list_price', [$start, $end]);
                 }
             ],
             'beds' => [
@@ -51,7 +77,11 @@ abstract class HouseSearchAbstract
             ],
             'city-id' => [
                 'apply' => function ($q, $id) {
-                    $q->where('city_id', $id);
+                    if (is_array($id)) {
+                        $q->whereIn('city_id', $id);
+                    } else {
+                        $q->where('city_id', $id);
+                    }
                 }
             ],
             'subway-line' => [

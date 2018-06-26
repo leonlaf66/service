@@ -6,5 +6,5 @@ return [
     'area_id' => 'ma',
     // 语言
     'locale' => 'en-US',
-    'fallback_locale' => 'zh-CN',
+    'fallback_locale' => 'zh-CN'
 ];

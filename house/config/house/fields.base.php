@@ -46,6 +46,12 @@ return [
 
         }
     ],
+    'latlon' => [
+        'title' => '',
+        'value' => function ($d, $m) {
+            return $m->latlng;
+        }
+    ],
     'prop_type_name' => [
         'title' => tt('Property', '类型'),
         'value' => function ($d, $m) {
