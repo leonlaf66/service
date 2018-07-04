@@ -1,4 +1,17 @@
 <?php
+static $sdCityIds = null;
+if (area_id() === 'ma' && is_null($sdCityIds)) {
+    $sdCityIds = app('db')
+        ->table('town')
+        ->select(['id'])
+        ->where(['state' => 'MA'])
+        ->get('id')
+        ->map(function ($d) {
+            return $d->id;
+        })
+        ->toArray();
+}
+
 return [
     'list_no' => [
         'title' => tt('List no', '房源号'),
@@ -96,14 +109,15 @@ return [
     ],
     'tags' => [
         'title' => tt('Tags', '标签'),
-        'value' => function ($d, $m) {
+        'value' => function ($d, $m) use ($sdCityIds) {
             $tags = '00000';
+            
             // 学区房
-            /*
-            $areaCodes = \models\SchoolDistrict::allCodes();
-            if (in_array($this->town, $areaCodes)) {
-                $tags[0] = '1';
-            }*/
+            if ($m->area_id === 'ma') {
+                if (in_array($m->city_id, $sdCityIds)) {
+                    $tags[0] = '1';
+                }
+            }
 
             // 卧室
             if (intval($m->no_beds) >= 3) {
