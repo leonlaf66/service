@@ -19,7 +19,7 @@ return [
     ],
     'name' => [
         'title' => tt('Name', '名称'),
-        'value' => function ($d, $m) {
+        'value' => function ($d, $m) use ($sdCityIds) {
             $names = [
                 'left' => [], 'right' => []
             ];
@@ -28,6 +28,11 @@ return [
             }
             if ($propTypeName = $m->getFieldValue('prop_type_name')) {
                 $names['left'][] = $propTypeName;
+            }
+            if (is_chinese() && $m->area_id === 'ma') {
+                if (in_array($m->city_id, $sdCityIds)) {
+                    $names['left'][] = ',学区房';
+                }
             }
             if ($beds = $m->no_beds) {
                 $names['right'][] = is_english() ? $beds.' bed' : $beds.'室';

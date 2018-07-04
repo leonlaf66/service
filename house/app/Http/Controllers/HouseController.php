@@ -73,7 +73,7 @@ class HouseController extends Controller
     public function get(Request $req, $id)
     {
         $defFields = 'id, nm, loc, price, prop, sub_tnm, beds, baths, square, lot_size, area, status,
-                      l_days, latlng, img_cnt, est_sale, taxes, roi, details, liked, tour, mls_id, area_id';
+                      l_days, latlng, img_cnt, est_sale, taxes, roi, details, liked, tour, mls_id, area_id, is_sd';
 
         if ($req->get('simple', '0') === '1') {
             $defFields = 'id, nm, loc, price, prop, beds, baths, square, status, l_days, mls_id';
@@ -87,6 +87,21 @@ class HouseController extends Controller
         $userId = $req->user() ? $req->user()->id : null;
 
         $fieldRuels = \Uljx\House\FieldRules::parse([
+            'is_sd' => function ($d) {
+                static $sdCityIds = null;
+                if ($d->area_id === 'ma' && is_null($sdCityIds)) {
+                    $sdCityIds = app('db')
+                        ->table('town')
+                        ->select(['id'])
+                        ->where(['state' => 'MA'])
+                        ->get('id')
+                        ->map(function ($d) {
+                            return $d->id;
+                        })
+                        ->toArray();
+                }
+                return in_array($d->city_id, $sdCityIds);
+            },
             'liked' => function ($d) use ($userId) {
                 return $userId ? $d->hasLike($userId) : false;
             },
