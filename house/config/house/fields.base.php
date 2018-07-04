@@ -1,15 +1,7 @@
 <?php
 static $sdCityIds = null;
 if (area_id() === 'ma' && is_null($sdCityIds)) {
-    $sdCityIds = app('db')
-        ->table('town')
-        ->select(['id'])
-        ->where(['state' => 'MA'])
-        ->get('id')
-        ->map(function ($d) {
-            return $d->id;
-        })
-        ->toArray();
+    $sdCityIds = \App\Helpers\Sd::allCityIds();
 }
 
 return [
@@ -29,7 +21,7 @@ return [
             if ($propTypeName = $m->getFieldValue('prop_type_name')) {
                 $names['left'][] = $propTypeName;
             }
-            if (is_chinese() && $m->area_id === 'ma') {
+            if (is_chinese() && $m->area_id === 'ma' && $m->prop_type !== 'RN') {
                 if (in_array($m->city_id, $sdCityIds)) {
                     $names['left'][] = ',学区房';
                 }

@@ -87,21 +87,6 @@ class HouseController extends Controller
         $userId = $req->user() ? $req->user()->id : null;
 
         $fieldRuels = \Uljx\House\FieldRules::parse([
-            'is_sd' => function ($d) {
-                static $sdCityIds = null;
-                if ($d->area_id === 'ma' && is_null($sdCityIds)) {
-                    $sdCityIds = app('db')
-                        ->table('town')
-                        ->select(['id'])
-                        ->where(['state' => 'MA'])
-                        ->get('id')
-                        ->map(function ($d) {
-                            return $d->id;
-                        })
-                        ->toArray();
-                }
-                return in_array($d->city_id, $sdCityIds);
-            },
             'liked' => function ($d) use ($userId) {
                 return $userId ? $d->hasLike($userId) : false;
             },
