@@ -21,7 +21,7 @@ return [
             if ($propTypeName = $m->getFieldValue('prop_type_name')) {
                 $names['left'][] = $propTypeName;
             }
-            if (is_chinese() && $m->area_id === 'ma' && $m->prop_type !== 'RN') {
+            if (is_chinese() && $m->area_id === 'ma' && in_array($m->prop_type, ['SF', 'MF', 'CC'])) {
                 if (in_array($m->city_id, $sdCityIds)) {
                     $names['left'][] = ',学区房';
                 }
