@@ -27,10 +27,13 @@ class Item
         $offset = ($page - 1) * $pageSize;
 
         return app('db')->table('yellow_page as e')
-            ->select('e.id', 'e.name', 'e.business', 'e.business_cn', 'e.rating', 'e.photo_hash', 't.type_id')
+            ->select('e.id', 'e.name', 'e.business', 'e.business_cn', 'e.rating', 'e.photo_hash', 't.type_id',
+                     'e.address', 'e.contact', 'e.license', 'e.phone', 'e.comments', 'e.hits')
             ->join('yellow_page_type as t', function ($join) use ($typeId) {
-                $join->on('e.id', '=', 't.yellow_page_id')
-                    ->where('t.type_id', $typeId);
+                $join->on('e.id', '=', 't.yellow_page_id');
+                if (intval($typeId)) {
+                    $join->where('t.type_id', $typeId);
+                }
             })
             ->where('e.area_id', $areaId)
             ->offset($offset)
@@ -58,6 +61,9 @@ class Item
             'id' => $d->type_id,
             'name' => tt($typeName, $d->type_name_cn)
         ];
+        if (empty($d->business_cn)) {
+            $d->business_cn = $d->business;
+        }
         $d->business = [$d->business, $d->business_cn];
         $d->photo_url = media_url('yellowpage/placeholder.jpg');
         unset($d->business_cn,
