@@ -11,9 +11,10 @@
 |
 */
 
-$router->get('/', function () use ($router) {
-    return 'USLEJU API V2.0';
-});
+$router->get('/dashboard', [
+    'as' => 'dashboard',
+    'uses' => 'DashboardController@all'
+]);
 
 $router->get('/areas/', [
     'as' => 'areas',
