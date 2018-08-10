@@ -7,6 +7,8 @@ import schema from './graphql'
 import staticData from './data'
 import config from 'config'
 
+console.log(config)
+
 const knexDb = knex(config.db)
 
 cpusReady ( () => {
@@ -31,7 +33,8 @@ cpusReady ( () => {
       settings: {
         'editor.cursorShape': 'line'
       }
-    }
+    },
+    introspection: true
   })
 
   const app = new Koa()
