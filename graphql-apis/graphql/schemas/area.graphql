@@ -1,0 +1,22 @@
+type AreaSummary {
+  house_sells:Int
+  house_rents:Int
+  house_markets: JSON
+}
+
+type Area {
+  id: ID!
+  name: String!
+  desc: String
+  img_src: String
+  settings: JSON
+  summaries: AreaSummary
+  top_houses: [TopHouse]
+  lastest_houses(limit:Int = 10) : [House]
+  lastest_news(limit:Int = 10) : [News]
+}
+
+type Query {
+  areas : [Area]
+  area(id: ID!): Area
+}

@@ -1,0 +1,18 @@
+type SubwayLine {
+ id: ID!
+ code: String
+ name: String
+ bg_color: String
+ font_color: String
+ stations: [SubwayStation]
+}
+
+type SubwayStation {
+  id: ID!
+  name: String
+  latlng: JSON
+}
+
+type Query {
+  subway : [SubwayLine]
+}

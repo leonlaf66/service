@@ -1,0 +1,11 @@
+input RegisterForm {
+  email: String!
+  password: String!
+  re_passpass: String!
+}
+
+type Mutation {
+  login (username: String!, password: String!) : Member
+  register (form: RegisterForm) : Member
+  reset_password (email: String!) : Boolean
+}

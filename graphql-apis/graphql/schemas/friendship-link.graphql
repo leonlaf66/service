@@ -1,0 +1,5 @@
+# 友情链接查询类
+type Query {
+  # 返回友情链接列表
+  friendship_links : [JSON]
+}

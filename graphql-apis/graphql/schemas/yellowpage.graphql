@@ -1,0 +1,49 @@
+type YellowPage {
+ id: ID!
+ name: String
+ business: String
+ address: String
+ contact: String
+ license: String
+ photo: String
+ website: String
+ intro: String
+ phone: String
+ email: String
+ rating: Int
+ hits: Int
+ comments: Int
+}
+
+type YellowPagePagination {
+  total: Int
+  page: Int
+  page_size: Int
+  page_count: Int
+  items: [YellowPage]
+}
+
+type YellowPageType {
+  id: ID!
+  name: String
+  photo: String
+}
+
+type GroupYellowPage {
+  id: ID!
+  name: String
+  url: String
+  items: [YellowPage]
+}
+
+# 黄页查询类
+type Query {
+  grouped_yellow_page: [GroupYellowPage]
+  top_yellow_pages: [YellowPage]
+  yellow_page_types: [YellowPageType]
+  search_yellow_page (type_id: Int = 0, page: Int = 1, page_size: Int = 15): YellowPagePagination
+}
+
+type Mutation {
+  yellow_page_hit (id: ID!) : YellowPage
+}

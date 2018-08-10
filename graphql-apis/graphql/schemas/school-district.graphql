@@ -1,0 +1,25 @@
+type SchoolDistrict {
+  id: ID!
+  code: String
+  name: String
+  name2: String
+  rating: Int
+  description: String
+  advantage: String
+  special: JSON
+  sat: JSON
+  racials: JSON
+  schools: JSON
+  environments: JSON
+  features: JSON
+  comments: JSON
+  environment: JSON
+  k12: JSON
+  summeries: JSON
+  hot_houses(limit:Int = 10): [House]
+}
+
+type Query {
+  school_district_list : [SchoolDistrict]
+  school_district (id: ID!) : SchoolDistrict
+}

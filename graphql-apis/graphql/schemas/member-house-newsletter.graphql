@@ -1,0 +1,24 @@
+type HouseNewsletter {
+  id: ID!
+  name: String
+  created_at: Date
+  updated_at: Date
+  data: JSON
+}
+
+type HouseNewsletterPagination {
+  total: Int
+  page: Int
+  page_size: Int
+  page_count: Int
+  items: [HouseNewsletter]
+}
+
+type Query {
+  find_house_newsletter (page:Int = 1, page_size: Int = 15): HouseNewsletterPagination
+}
+
+type Mutation {
+  create_house_newsletter (data: JSON) : HouseNewsletter
+  remove_house_newsletter (id:Int) : Boolean
+}

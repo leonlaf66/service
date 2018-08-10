@@ -1,0 +1,67 @@
+{
+  "list_no": {
+    "title": "List no",
+    "index": "@list_no",
+    "zh-CN": {
+      "title": "房源号"
+    }
+  },
+  "prop_type_name": {
+    "title": "Property",
+    "zh-CN": {
+      "title": "类型"
+    }
+  },
+  "list_days": {
+    "title": "Days on market",
+    "format": "date",
+    "zh-CN": {
+      "title": "上市时间"
+    }
+  },
+  "no_rooms": {
+    "title": "Rooms",
+    "zh-CN": {
+      "title": "房间数"
+    }
+  },
+  "no_bedrooms": {
+    "title": "Bedrooms",
+    "zh-CN": {
+      "title": "卧室数"
+    }
+  },
+  "no_full_baths": {
+    "title": "Full Bathrooms",
+    "zh-CN": {
+      "title": "全卫"
+    }
+  },
+  "no_half_baths": {
+    "title": "Half Bathrooms",
+    "zh-CN": {
+      "title": "半卫"
+    }
+  },
+  "square_feet": {
+    "title": "Square Feet",
+    "zh-CN": {
+      "title": "面积"
+    },
+    "format": "sq.ft"
+  },
+  "lot_size": {
+    "title": "Lot Size",
+    "zh-CN": {
+      "title": "面积"
+    },
+    "format": "sq.ft"
+  },
+  "list_price": {
+    "title": "Price",
+    "format": "price",
+    "zh-CN": {
+      "title": "价格"
+    }
+  }
+}

@@ -1,0 +1,23 @@
+type HouseTour {
+  id: ID!
+  date_start: Date
+  date_end: Date
+  is_confirmed: Boolean
+  house: House
+}
+
+type HouseTourPagination {
+  total: Int
+  page: Int
+  page_size: Int
+  page_count: Int
+  items: [HouseTour]
+}
+
+type Query {
+  find_house_tour (page:Int = 1, page_size: Int = 15): HouseTourPagination
+}
+
+type Mutation {
+  remove_house_tour (id:Int) : Boolean
+}

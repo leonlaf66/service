@@ -1,0 +1,38 @@
+# 会员
+type Member {
+  id: ID
+  email: String,
+  access_token: String
+  confirmed_at: Date
+  registration_ip: String
+  created_at: Date
+  updated_at: Date
+  open_id: String
+  profile: MemberProfile
+}
+
+# 会员资料输入类型
+input MemberProfileInput {
+  name: String
+  phone_number: String
+  job_name: String
+  where_from: String
+}
+
+# 会员资料
+type MemberProfile {
+  name: String
+  phone_number: String
+  job_name: String
+  where_from: String
+}
+
+# 会员中心查询类
+type Query {
+  # 获取当前用户信息
+  get_member: Member
+}
+
+type Mutation {
+  modify_member_profile (profile: MemberProfileInput!) : MemberProfile
+}

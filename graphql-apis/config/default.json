@@ -1,0 +1,32 @@
+{
+  "appToken": "b2e476cb5ddcbf81c337218d5b5d43fa83bd6a8d4c9b7ba4ea047c70d22a828c",
+  "server": {
+    "port": 4000
+  },
+  "multiCpuEnabled": false,
+  "db": {
+    "client": "pg",
+    "connection": {
+      "host": "127.0.0.1",
+      "user": "",
+      "password": "",
+      "database": ""
+    },
+    "pool": {
+      "min": 0,
+      "max": 7
+    }
+  },
+  "staticData": {
+    "RN": ["Rental", "租房"],
+    "SF": ["Single Family", "单家庭"],
+    "MF": ["Multi Family", "多家庭"],
+    "CC": ["Condominium", "公寓"],
+    "CI": ["Commercial", "商业用房"],
+    "BU": ["Business Opportunity", "营业用房"],
+    "LD": ["Land", "土地"]
+  },
+  "media": {
+    "baseUrl": ""
+  }
+}

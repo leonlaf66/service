@@ -1,0 +1,34 @@
+enum CommentPageType {
+  yellowpage
+  news
+}
+
+type CommentPage {
+  id: ID!
+  rating: Float
+  results: CommentPagination
+}
+
+type Comment {
+  id: ID!
+  rating: Float
+  user: Member
+  content: String
+  created_at: Date
+}
+
+type CommentPagination {
+  total: Int
+  page: Int
+  page_size: Int
+  page_count: Int
+  items: [Comment]
+}
+
+type Query {
+  find_comments(page_type: CommentPageType = yellowpage, type_id:ID! ) : CommentPage
+}
+
+type Mutation {
+  created_comment (page_id: CommentPageType, type_id: ID!, content: String, rating: Float) : Comment
+}

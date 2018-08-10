@@ -1,0 +1,23 @@
+# JSON类型
+scalar JSON
+
+# 日期类型
+scalar Date
+
+# 坐标输入类型
+input LatLngInput {
+  lat: Float!
+  lng: Float!
+}
+
+# 浮点输入类型
+input FloatRangeInput {
+  from: Float
+  to: Float
+}
+
+# 应用类型
+enum AppType {
+  PC
+  MOBILE
+}
