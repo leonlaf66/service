@@ -1,0 +1,7 @@
+export NODE_ENV=production
+
+git reset --hard
+git pull origin HEAD
+yarn install
+pm2 stop usleju-house-service -f
+pm2 start index.js -n usleju-house-service
