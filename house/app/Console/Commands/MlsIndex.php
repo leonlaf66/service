@@ -255,7 +255,7 @@ class MlsIndex extends Command
             },
             'index_at' => function () {
                 return date('Y-m-d H:i:s');
-            },*/
+            },
             'info' => function ($d, $row, $indexData) {
                 $cityId = array_get($indexData, 'city_id');
                 $cities = (function () {

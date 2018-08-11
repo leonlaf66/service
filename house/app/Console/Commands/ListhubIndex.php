@@ -159,7 +159,7 @@ class ListhubIndex extends Command
             },
             'parking_spaces' => function ($d) {
                 return get_xml_text($d, 'DetailedCharacteristics/NumParkingSpaces');
-            },*/
+            },
             'prop_type' => function ($d, $row) {
                 $propTypeName = get_xml_text($d, 'PropertyType');
                 $propSubTypeName = get_xml_text($d, 'PropertySubType');
@@ -225,7 +225,7 @@ class ListhubIndex extends Command
             },
             'postal_code' => function ($d, $row) {
                 return object_get($d, 'zip_code');
-            },*/
+            },
             'city_id' => function ($d, $row) {
                 $state = $row->state;
                 $cityName = get_xml_text($d, 'Address/City');
