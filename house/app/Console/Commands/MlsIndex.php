@@ -245,7 +245,9 @@ class MlsIndex extends Command
             'area_id' => function () {
                 return 'ma';
             },
-            'is_online_abled' => function($d) {
+            'is_online_abled' => function($d, $row, $result) {
+                if (!$result['city_id']) return false;
+                if (intval($result['list_price']) === 0) return false; 
                 return in_array(array_get($d, 'status'), ['ACT','NEW','BOM','PCG','RAC','EXT']);
             },
             'update_at' => function ($d, $row) {

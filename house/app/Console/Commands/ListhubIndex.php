@@ -254,6 +254,9 @@ class ListhubIndex extends Command
                 return strtolower($row->state);
             },
             'is_online_abled' => function($d, $row, $result) {
+                if (!$result['city_id']) return false;
+                if (intval($result['list_price']) === 0) return false;
+                
                 return array_get($result, 'status') === 'ACT';
             },
             'update_at' => function ($d, $row) {
