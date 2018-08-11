@@ -81,7 +81,7 @@ class MlsIndex extends Command
         $fieldMaps = $this->getFieldMaps();
         $indexData = [];
         foreach ($fieldMaps as $field => $callable) {
-            $indexData[$field] = $callable($jsonData, $row);
+            $indexData[$field] = $callable($jsonData, $row, $indexData);
         }
 
         if (empty($indexData['prop_type'])) return;
@@ -97,7 +97,8 @@ class MlsIndex extends Command
             $table->insert($indexData);
         }
 
-        // 主数据表
+        // 附数据表
+        /*
         $table = app('db')->table('house_data');
         
         if ($table->where('list_no', $listNo)->count() > 0) {
@@ -109,18 +110,19 @@ class MlsIndex extends Command
                 'list_no' => array_get($indexData, 'list_no'),
                 'orgi_data' => object_get($row, 'json_data')
             ]);
-        }
+        }*/
     }
 
     public function getFieldMaps()
     {
         return [
+            /*
             'list_no' => function ($d) {
                 return array_get($d, 'list_no');
-            },
+            },*/
             'list_price' => function ($d) {
                 return array_get($d, 'list_price');
-            },
+            },/*
             'list_date' => function ($d) {
                 $listDate = array_get($d, 'list_date');
                 $listDate = str_replace('+00', '', $listDate);
@@ -145,10 +147,10 @@ class MlsIndex extends Command
             },
             'parking_spaces' => function ($d) {
                 return array_get($d, 'parking_spaces');
-            },
+            },*/
             'prop_type' => function ($d) {
                 return array_get($d, 'prop_type');
-            },
+            },/*
             'latlng' => function ($d) {
                 $lat = array_get($d, 'latitude');
                 $lon = array_get($d, 'longitude');
@@ -218,10 +220,10 @@ class MlsIndex extends Command
             },
             'postal_code' => function ($d) {
                 return array_get($d, 'zip_code');
-            },
+            },*/
             'city_id' => function ($d) {
                 return app('App\Repositories\Mls\City')->findIdByCode('MA', array_get($d, 'town'));
-            },
+            },/*
             'city_code' => function ($d) {
                 return array_get($d, 'town');
             },
@@ -255,6 +257,71 @@ class MlsIndex extends Command
             },
             'index_at' => function () {
                 return date('Y-m-d H:i:s');
+            },*/
+            'info' => function ($d, $row, $indexData) {
+                $cityId = array_get($indexData, 'city_id');
+                $cities = (function () {
+                    static $cities = [];
+                    if (empty($cities)) {
+                        $cities = app('db')->table('town')
+                            ->select('id', 'name', 'name_cn')
+                            ->where('state', 'MA')
+                            ->get()
+                            ->keyBy('id')
+                            ->map(function ($_d) {
+                                return [$_d->name, $_d->name_cn];
+                            });
+                    }
+                    return $cities;
+                })();
+
+                $isSd = (function ($cityId) {
+                    static $sdCityIds = [];
+                    if (empty($sdCityIds)) {
+                        $sdCityIds = \App\Helpers\Sd::allCityIds();
+                    }
+                    return in_array($cityId, $sdCityIds);
+                })($cityId);
+
+                $location = (function ($d, $cityId) {
+                    $propType = array_get($d, 'prop_type');
+
+                    $fields = in_array($propType, ['RN', 'CC']) ? [
+                        'street', 'unit_no', 'town', 'zip_code'
+                    ] : [
+                        'street', 'town', 'zip_code'
+                    ];
+
+                    $results = [];
+                    foreach($fields as $field) {
+                        $value = array_get($d, $field);
+                        if($field == 'street') {
+                            $value = array_get($d, 'street_num').' '.ucwords(strtolower(array_get($d, 'street_name')));
+                            if (substr($value, strlen($value) - 1, 1) === '.') {
+                                $value = substr($value, 0, strlen($value) - 1);
+                            }
+                            $value .= ',';
+                        }
+                        if($field == 'town') {
+                            $value = app('\App\Repositories\Mls\City')->findNameById('MA', $cityId, true);
+                        }
+                        if($field == 'zip_code'){
+                            $value = 'MA '.array_get($d, 'zip_code');
+                        }
+                        if($value) $results[] = $value;
+                    }
+
+                    return implode(' ', $results);
+                })($d, $cityId);
+
+                $data = [
+                    'is_sd' => $isSd,
+                    'loc' => $location,
+                    'city_name' => $cities[$cityId] ?? ['', ''],
+                    'photo_count' => $d['photo_count']
+                ];
+
+                return json_encode($data);
             }
         ];
     }
