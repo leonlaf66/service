@@ -107,7 +107,6 @@ class ListhubIndex extends Command
         }
 
         // 附数据
-        /*
         $table = app('db')->table('house_data');
 
         if ($table->where('list_no', $listNo)->count() > 0) {
@@ -122,7 +121,6 @@ class ListhubIndex extends Command
         }
 
         $this->processCases($xmlDoc, $row); // 缺失数据汇报给listhub官方
-        */
 
         unset($indexData);
     }
@@ -130,7 +128,6 @@ class ListhubIndex extends Command
     public function getFieldMaps()
     {
         return [
-            /*
             'list_no' => function ($d) {
                 return get_xml_text($d, 'MlsNumber');
             },
@@ -168,7 +165,7 @@ class ListhubIndex extends Command
                 $propSubTypeName = get_xml_text($d, 'PropertySubType');
 
                 return get_listhub_prop_type($propTypeName, $propSubTypeName);
-            },/*
+            },
             'latlng' => function ($d, $row) {
                 $lat = object_get($row, 'latitude');
                 $lon = object_get($row, 'longitude');
@@ -233,7 +230,7 @@ class ListhubIndex extends Command
                 $state = $row->state;
                 $cityName = get_xml_text($d, 'Address/City');
                 return app('App\Repositories\Listhub\City')->findIdByName($state, $cityName);
-            },/*
+            },
             'parent_city_id' => function ($d, $row) { // 处理CA的子城市
                 if ($row->state !== 'CA') {
                     return null;
@@ -252,10 +249,10 @@ class ListhubIndex extends Command
                     ->orderBy('id', 'ASC')
                     ->limit(1)
                     ->value('parent_id');
-            },*/
+            },
             'area_id' => function ($d, $row) {
                 return strtolower($row->state);
-            },/*
+            },
             'is_online_abled' => function($d, $row, $result) {
                 return array_get($result, 'status') === 'ACT';
             },
@@ -266,7 +263,7 @@ class ListhubIndex extends Command
             },
             'index_at' => function () {
                 return date('Y-m-d H:i:s');
-            },*/
+            },
             'info' => function ($d, $row, $indexData) {
                 $state = strtoupper(array_get($indexData, 'area_id'));
                 $cityId = array_get($indexData, 'city_id');

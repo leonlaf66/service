@@ -98,7 +98,6 @@ class MlsIndex extends Command
         }
 
         // 附数据表
-        /*
         $table = app('db')->table('house_data');
         
         if ($table->where('list_no', $listNo)->count() > 0) {
@@ -110,19 +109,18 @@ class MlsIndex extends Command
                 'list_no' => array_get($indexData, 'list_no'),
                 'orgi_data' => object_get($row, 'json_data')
             ]);
-        }*/
+        }
     }
 
     public function getFieldMaps()
     {
         return [
-            /*
             'list_no' => function ($d) {
                 return array_get($d, 'list_no');
-            },*/
+            },
             'list_price' => function ($d) {
                 return array_get($d, 'list_price');
-            },/*
+            },
             'list_date' => function ($d) {
                 $listDate = array_get($d, 'list_date');
                 $listDate = str_replace('+00', '', $listDate);
@@ -147,10 +145,10 @@ class MlsIndex extends Command
             },
             'parking_spaces' => function ($d) {
                 return array_get($d, 'parking_spaces');
-            },*/
+            },
             'prop_type' => function ($d) {
                 return array_get($d, 'prop_type');
-            },/*
+            },
             'latlng' => function ($d) {
                 $lat = array_get($d, 'latitude');
                 $lon = array_get($d, 'longitude');
@@ -220,10 +218,10 @@ class MlsIndex extends Command
             },
             'postal_code' => function ($d) {
                 return array_get($d, 'zip_code');
-            },*/
+            },
             'city_id' => function ($d) {
                 return app('App\Repositories\Mls\City')->findIdByCode('MA', array_get($d, 'town'));
-            },/*
+            },
             'city_code' => function ($d) {
                 return array_get($d, 'town');
             },
