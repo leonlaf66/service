@@ -25,7 +25,7 @@ class HouseGeneralSearch extends HouseSearchAbstract
 
             if (is_numeric($q) && strlen($q) === 5) { // 是邮编
                 $query->where('postal_code', $q);
-            } elseif (preg_match('/[a-zA-Z]{0,2}[0-9]{5,10}/', $q)) { // 是list_no
+            } elseif (preg_match('/^[A-Z]{0,2}[0-9]{5,10}$/', $q, $sds)) { // 是list_no
                 $query->where('list_no', $q);
             } else { // 当做城市名
                 $q = ucwords(strtolower($q));
