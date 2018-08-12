@@ -305,6 +305,13 @@ class ListhubIndex extends Command
                 ];
 
                 return json_encode($data);
+            },
+            'skey' => function ($d, $row, $indexData) {
+                $info = json_decode($indexData['info'], true);
+                $loc = trim(array_get($info, 'loc', ''));
+                $loc = preg_replace('/[^a-zA-Z0-9\s]/i', '', $loc);
+
+                return "to_tsvector('{$loc}')";
             }
         ];
     }
