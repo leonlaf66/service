@@ -39,7 +39,18 @@ class HouseGeneralSearch extends HouseSearchAbstract
                         $query->where('city_id', $cityId);
                     }
                 } else {
-                    $query->whereRaw('1=2');
+                    /*
+                    select list_no, info->'loc' as loc 
+                        from house_index_v2
+                        where skey @@ to_tsquery('english', 'boston&commonwealth&ave')
+                        order by skey <=> to_tsquery('english', 'boston&commonwealth&ave')
+                        limit 10;
+                    */
+                    $q = str_replace("'", '', $q);
+                    $q = preg_replace('/[\s]/i', '&', $q);
+                    $skey = "to_tsquery('english', '{$q}')";
+                    $query->whereRaw("skey @@ {$skey}");
+                    $query->orderByRaw("{$skey} ASC");
                 }
             }
         }
