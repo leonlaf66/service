@@ -12,8 +12,13 @@ type Area {
   settings: JSON
   summaries: AreaSummary
   top_houses: [TopHouse]
-  lastest_houses(limit:Int = 10) : [House]
-  lastest_news(limit:Int = 10) : [News]
+  lastest_houses(first:Int = 10) : [House]
+  lastest_news(first:Int = 10) : [News]
+}
+
+input IntegerRangeInput {
+  from: Int!
+  to: Int!
 }
 
 type Query {

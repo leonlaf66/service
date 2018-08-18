@@ -8,11 +8,11 @@ module.exports = {
     house: d => house.load(d.list_no)
   },
   Query: {
-    find_house_tour: (_, { page, page_size }, { user: { id } }) => {
+    find_house_tour: (_, { first, skip }, { user: { id } }) => {
       let query = knex('house_member_tour')
         .where('user_id', id)
 
-      return pagination(query, page, page_size)
+      return pagination(query, first, skip)
     }
   },
   Mutation: {

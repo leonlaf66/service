@@ -10,7 +10,7 @@ input LatLngInput {
   lng: Float!
 }
 
-# 浮点输入类型
+# 整数输入类型
 input FloatRangeInput {
   from: Float
   to: Float

@@ -19,7 +19,7 @@ type House {
   details: JSON
   polygons: JSON
   # 相关房源
-  associated_houses(limit:Int = 5): [House]
+  associated_houses(first:Int = 5): [House]
 }
 
 # 推荐房源类型
@@ -33,9 +33,6 @@ type TopHouse {
 # 房源搜索分页类型
 type HousePagination {
   total: Int
-  page: Int
-  page_size: Int
-  page_count: Int
   items: [House]
 }
 
@@ -66,17 +63,17 @@ type HouseSummeries {
 # 房源查询类
 type Query {
   # 搜索房源, 返回房源分页对象，包含results房源列表
-  search_houses (q: String = "", filters: HouseFiltersInput, sort: Int = 1, page: Int = 1, page_size: Int = 15) : HousePagination
+  search_houses (only_rental: Boolean = false, q: String = "", filters: HouseFiltersInput, sort: Int = 1, first: Int = 15, skip: Int = 0) : HousePagination
   # 获取一个房源的详情
   house (id: ID!) : House
   # 根据ids获取房源列表
   houses (ids: [ID!]) : [House]
   # 根据给定坐标+距离(单位:公里)获取周边房源列表
-  nearby_houses (latlng: LatLngInput!, limit: Int = 10, distance:Int = 2) : [House]
+  nearby_houses (latlng: LatLngInput!, first: Int = 10, distance:Int = 2) : [House]
   # 获取房源统计
   area_house_summeries: HouseSummeries
   # 推荐精品房源
-  top_houses (limit: Int = 0): [TopHouse]
+  top_houses (first: Int = 0): [TopHouse]
   # 房源搜索自动完成字典(城市+zipcode)
-  autocomplete_cities (q: String = "", limit: Int = 0) : JSON
+  autocomplete_cities (q: String = "", first: Int = 0) : JSON
 }

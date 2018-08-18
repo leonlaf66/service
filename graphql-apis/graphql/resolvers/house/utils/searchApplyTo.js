@@ -64,7 +64,11 @@ export default async function (ctx, query, q, filters, order) {
       if (city) {
         query.where('city_id', city.id)
       } else {
-        query.whereRaw('1=2')
+        q = q.replace(/\'/g, '').replace(/[\s]+/g, '&')
+        const skey = `to_tsquery('english', '${q}')`
+
+        query.whereRaw(`"skey" @@ ${skey}`)
+        query.orderByRaw(`${skey} ASC`)
       }
     }
   }

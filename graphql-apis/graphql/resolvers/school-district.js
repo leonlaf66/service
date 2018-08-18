@@ -49,7 +49,7 @@ module.exports = {
   }
 }
 
-async function hot_houses({ __is_detail, code }, { limit }) {
+async function hot_houses({ __is_detail, code }, { first }) {
   if (__is_detail) {
     const cityIds = await knex('town')
       .whereIn('short_name', code.split('/'))
@@ -57,7 +57,7 @@ async function hot_houses({ __is_detail, code }, { limit }) {
 
     return houseBuilder('ma')
       .whereIn('city_id', cityIds)
-      .limit(limit)
+      .limit(first)
   }
   return []
 }

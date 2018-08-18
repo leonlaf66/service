@@ -1,23 +1,13 @@
-const create = (query, total, page, page_size) => {
-  const offset = (page - 1) * page_size
-  const page_count = Math.ceil(total * 1.0 / page_size)
+export default (query, first, skip) => {
+  query.limit(first).offset(skip)
 
-  query.limit(page_size).offset(offset)
-
-  return {
-    total,
-    page,
-    page_size,
-    page_count,
-    items: query
-  }
-}
-
-export default (query, page = 1, page_size = 15) => {
   return query.clone()
     .clearSelect()
     .clearOrder()
+    .limit(1)
+    .offset(0)
     .count()
     .first()
-    .then(row => create(query, row.count, page, page_size))
+    .then(row => row.count)
+    .then(total => ({total, items: query}))
 }

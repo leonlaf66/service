@@ -27,14 +27,14 @@ module.exports = {
   }
 }
 
-function search (_, { type_id, page, page_size }, ctx) {
+function search (_, { type_id, first, skip }, ctx) {
   let query = knex('yellow_page')
     .where('area_id', ctx.area_id)
     .orderBy('weight', 'desc')
     .orderBy('rating', 'desc')
     .orderBy('id', 'desc')
 
-  return pagination(query, page, page_size)
+  return pagination(query, first, skip)
 }
 
 function groupedList(_, args, { area_id }) {

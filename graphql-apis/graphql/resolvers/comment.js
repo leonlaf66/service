@@ -15,7 +15,7 @@ module.exports = {
   }
 }
 
-async function find_comments (_, { page_type, type_id }) {
+async function find_comments (_, { page_type, type_id, first, skip }) {
   // 获取pageId
   const page_url = `${page_type}/${type_id}`
   let typeRow = await knex('comment_page').where('url', page_url).first()
@@ -25,9 +25,6 @@ async function find_comments (_, { page_type, type_id }) {
       rating: null,
       results: {
         total: 0,
-        page: 1,
-        page_size: 15,
-        page_count: 0,
         results: []
       }
     }
@@ -49,7 +46,7 @@ async function find_comments (_, { page_type, type_id }) {
   return {
     id: pageId,
     rating: avgRating,
-    results: pagination(resQuery)
+    results: pagination(resQuery, first, skip)
   }
 }
 

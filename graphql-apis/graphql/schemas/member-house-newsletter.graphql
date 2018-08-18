@@ -8,14 +8,11 @@ type HouseNewsletter {
 
 type HouseNewsletterPagination {
   total: Int
-  page: Int
-  page_size: Int
-  page_count: Int
   items: [HouseNewsletter]
 }
 
 type Query {
-  find_house_newsletter (page:Int = 1, page_size: Int = 15): HouseNewsletterPagination
+  find_house_newsletter (first:Int = 15, skip: Int = 0): HouseNewsletterPagination
 }
 
 type Mutation {

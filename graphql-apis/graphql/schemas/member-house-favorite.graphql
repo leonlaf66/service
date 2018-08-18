@@ -7,14 +7,11 @@ type HouseFavorite {
 
 type HouseFavoritePagination {
   total: Int
-  page: Int
-  page_size: Int
-  page_count: Int
   items: [HouseFavorite]
 }
 
 type Query {
-  find_favorite_houses (rental: Boolean = false, page:Int = 1, page_size: Int = 15): HouseFavoritePagination
+  find_favorite_houses (rental: Boolean = false, first:Int = 15, skip: Int = 0): HouseFavoritePagination
 }
 
 type Mutation {

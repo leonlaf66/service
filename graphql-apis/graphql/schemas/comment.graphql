@@ -19,14 +19,11 @@ type Comment {
 
 type CommentPagination {
   total: Int
-  page: Int
-  page_size: Int
-  page_count: Int
   items: [Comment]
 }
 
 type Query {
-  find_comments(page_type: CommentPageType = yellowpage, type_id:ID! ) : CommentPage
+  find_comments(page_type: CommentPageType = yellowpage, type_id:ID!, first:Int = 15, skip:Int = 0) : CommentPage
 }
 
 type Mutation {

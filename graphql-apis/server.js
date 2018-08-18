@@ -7,8 +7,6 @@ import schema from './graphql'
 import staticData from './data'
 import config from 'config'
 
-console.log(config)
-
 const knexDb = knex(config.db)
 
 cpusReady ( () => {

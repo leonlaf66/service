@@ -52,7 +52,7 @@ function newsCats (root, args, { tt }) {
 /**
  * 新闻列表
  */
-async function findNews (_, { type_id, page, page_size }, ctx, info) {
+async function findNews (_, { type_id, first, skip }, ctx, info) {
   // 建立查询
   let query = newsBaseQuery(ctx.area_id)
   if (type_id) {
@@ -60,7 +60,7 @@ async function findNews (_, { type_id, page, page_size }, ctx, info) {
   }
 
   // 建立分页
-  return pagination(query, page, page_size)
+  return pagination(query, first, skip)
 }
 
 /**
@@ -80,33 +80,33 @@ async function news (_, { id }, ctx, info) {
 /**
  * 获取最新资讯
  */
-async function nearestNewsList (house, { limit }, ctx, info) {
+async function nearestNewsList (house, { first }, ctx, info) {
   // 建立查询
   return await newsBaseQuery(ctx.area_id)
-    .limit(limit)
+    .limit(first)
 }
 
 /**
  * 获取热门新闻
  */
-async function hotNewsList (_source, { limit }, ctx, info) {
+async function hotNewsList (_source, { first }, ctx, info) {
   // 建立查询
   return await newsBaseQuery(ctx.area_id)
     .where('is_hot', true)
-    .limit(limit)
+    .limit(first)
 }
 
 /**
  * 同类型其它新闻
  */
-async function same_type_news({ __is_detail, type_id, id }, { limit }) {
+async function same_type_news({ __is_detail, type_id, id }, { first }) {
   if (!__is_detail) return []
 
   return knex('news')
     .where('type_id', type_id)
     .where('id', '<>', id)
     .orderBy('created_at', 'DESC')
-    .limit(limit)
+    .limit(first)
 }
 
 /**

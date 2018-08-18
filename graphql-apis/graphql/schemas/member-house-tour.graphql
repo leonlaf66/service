@@ -8,14 +8,11 @@ type HouseTour {
 
 type HouseTourPagination {
   total: Int
-  page: Int
-  page_size: Int
-  page_count: Int
   items: [HouseTour]
 }
 
 type Query {
-  find_house_tour (page:Int = 1, page_size: Int = 15): HouseTourPagination
+  find_house_tour (first:Int = 15, skip: Int = 0): HouseTourPagination
 }
 
 type Mutation {

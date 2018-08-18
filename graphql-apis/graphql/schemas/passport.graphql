@@ -1,0 +1,24 @@
+input RegisterForm {
+  email: String!
+  password: String!
+  confirm_password: String!
+}
+
+type LoginResponse {
+  success: Boolean
+  errors: JSON
+  member: Member
+}
+
+type RegisterResponse {
+  success: Boolean
+  errors: JSON
+  member: Member
+}
+
+type Mutation {
+  login (username: String!, password: String!) : LoginResponse
+  openid_login (open_id: String!) : Member
+  register (form: RegisterForm) : RegisterResponse
+  reset_password (email: String!) : Boolean
+}

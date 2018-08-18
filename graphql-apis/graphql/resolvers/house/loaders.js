@@ -8,4 +8,4 @@ export const house = new DataLoader(keys => {
     .column({'id': 'list_no'})
     .whereIn('list_no', keys)
     .then(rows => mapTo(keys, r => r.id)(rows))
-})
+}, { cache: false })

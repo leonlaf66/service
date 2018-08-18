@@ -35,11 +35,11 @@ async function newsletter_data (d, args, { tt }) {
   return data
 }
 
-async function find_house_newsletter (_, { page, page_size }, { user: { id } }) {
+async function find_house_newsletter (_, { first, skip }, { user: { id } }) {
   let query = knex('house_member_newsletter')
     .where('user_id', id)
 
-  return pagination(query, page, page_size)
+  return pagination(query, first, skip)
 }
 
 async function create_house_newsletter () {

@@ -16,7 +16,7 @@ type SchoolDistrict {
   environment: JSON
   k12: JSON
   summeries: JSON
-  hot_houses(limit:Int = 10): [House]
+  hot_houses(first:Int = 10): [House]
 }
 
 type Query {

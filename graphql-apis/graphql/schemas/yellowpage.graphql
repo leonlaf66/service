@@ -17,9 +17,6 @@ type YellowPage {
 
 type YellowPagePagination {
   total: Int
-  page: Int
-  page_size: Int
-  page_count: Int
   items: [YellowPage]
 }
 
@@ -41,7 +38,7 @@ type Query {
   grouped_yellow_page: [GroupYellowPage]
   top_yellow_pages: [YellowPage]
   yellow_page_types: [YellowPageType]
-  search_yellow_page (type_id: Int = 0, page: Int = 1, page_size: Int = 15): YellowPagePagination
+  search_yellow_page (type_id: Int = 0, first: Int = 15, skip: Int = 0): YellowPagePagination
 }
 
 type Mutation {

@@ -21,8 +21,8 @@ module.exports = {
     summaries: d => d,
     settings: d => d.__is_detail ? loaders.settings(d.id) : null,
     top_houses: d => loaders.topHouse.load(d.id),
-    lastest_houses: (d, { limit }) => loaders.lastestHouse(limit).load(d.id),
-    lastest_news: (d, { limit }) => loaders.lastestNews(limit).load(d.id)
+    lastest_houses: (d, { first }) => loaders.lastestHouse(first).load(d.id),
+    lastest_news: (d, { first }) => loaders.lastestNews(first).load(d.id)
   },
   AreaSummary: {
     async house_sells (area) {

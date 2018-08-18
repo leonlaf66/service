@@ -39,6 +39,8 @@ export default {
     return d.info.photo_count
   },
   roi (d) {
+    if (!d.__is_detail) return []
+    
     if (d.area_id === 'ma') {
       return mlsHouseRoi(d)
     }

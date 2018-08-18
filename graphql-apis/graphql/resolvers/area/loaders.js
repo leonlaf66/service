@@ -41,11 +41,11 @@ export const topHouse = new DataLoader(areaIds => {
   cacheKeyFn: () => (new Date()).toDateString()
 })
 
-export function lastestHouse(limit) {
+export function lastestHouse(first) {
   return new DataLoader(areaIds => {
     const findSql = areaIds.map(areaId => (
       houseBuilder(areaId)
-        .limit(limit)
+        .limit(first)
         .toString()
     ))
     
@@ -57,7 +57,7 @@ export function lastestHouse(limit) {
   })
 }
 
-export function lastestNews(limit) {
+export function lastestNews(first) {
   return new DataLoader(areaIds => {
     const findSql = areaIds.map(areaId => (
       knex('news')
@@ -65,7 +65,7 @@ export function lastestNews(limit) {
         .column(knex.raw(`'${areaId}' as it_area_id`))
         .where('area_id', '@>', `{${areaId}}`)
         .orderBy('created_at', 'DESC')
-        .limit(limit)
+        .limit(first)
         .toString()
     ))
 
