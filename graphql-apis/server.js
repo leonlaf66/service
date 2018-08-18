@@ -1,11 +1,13 @@
 import cpusReady from './cluster'
 import Koa from 'koa'
-import { ApolloServer } from 'apollo-server-koa'
+import { ApolloServer, defaultPlaygroundOptions } from 'apollo-server-koa'
 import knex from 'knex'
 import cors from 'koa2-cors'
 import schema from './graphql'
 import staticData from './data'
 import config from 'config'
+
+defaultPlaygroundOptions.settings['editor.cursorShape'] = 'line'
 
 const knexDb = knex(config.db)
 
@@ -27,11 +29,7 @@ cpusReady ( () => {
         return ctx.req.headers.language === 'en-US' ? en : zh
       }
     }),
-    playground: {
-      settings: {
-        'editor.cursorShape': 'line'
-      }
-    },
+    playground: true,
     introspection: true
   })
 
