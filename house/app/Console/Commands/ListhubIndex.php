@@ -118,6 +118,9 @@ class ListhubIndex extends Command
                 $cityName = get_xml_text($d, 'Address/City');
                 return app('App\Repositories\Listhub\City')->findIdByName($state, $cityName);
             },
+            'area_id' => function ($d, $row) {
+                return strtolower($row->state);
+            },
             /*
             'list_date' => function ($d, $row) {
                 $listDate = get_xml_text($d, 'ListingDate');
@@ -227,9 +230,6 @@ class ListhubIndex extends Command
                     ->orderBy('id', 'ASC')
                     ->limit(1)
                     ->value('parent_id');
-            },
-            'area_id' => function ($d, $row) {
-                return strtolower($row->state);
             },
             'is_online_abled' => function($d, $row, $result) {
                 if (!$result['city_id']) return false;
