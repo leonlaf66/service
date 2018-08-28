@@ -144,7 +144,7 @@ class ListhubIndex extends Command
             },
             'parking_spaces' => function ($d) {
                 return get_xml_text($d, 'DetailedCharacteristics/NumParkingSpaces');
-            },*/
+            },
             'taxes' => function ($d) {
                 return get_xml_text($d, 'Taxes/Tax/Amount');
             },
