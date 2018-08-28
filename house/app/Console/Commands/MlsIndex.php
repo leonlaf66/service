@@ -91,6 +91,9 @@ class MlsIndex extends Command
             'prop_type' => function ($d) {
                 return array_get($d, 'prop_type');
             },
+            'city_id' => function ($d) {
+                return app('App\Repositories\Mls\City')->findIdByCode('MA', array_get($d, 'town'));
+            },
             /*
             'list_date' => function ($d) {
                 $listDate = array_get($d, 'list_date');
@@ -191,9 +194,6 @@ class MlsIndex extends Command
             },
             'postal_code' => function ($d) {
                 return array_get($d, 'zip_code');
-            },
-            'city_id' => function ($d) {
-                return app('App\Repositories\Mls\City')->findIdByCode('MA', array_get($d, 'town'));
             },
             'city_code' => function ($d) {
                 return array_get($d, 'town');
