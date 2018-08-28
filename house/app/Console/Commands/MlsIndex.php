@@ -56,12 +56,17 @@ class MlsIndex extends Command
         $listNo = array_get($jsonData, 'list_no');
 
         // 主表
+        $skey = $indexData['skey'];
+        unset($indexData['skey']);
+
         $table = app('db')->table('house_index_v2');
         if ($table->where('list_no', $listNo)->count() > 0) {
             $table->where('list_no', $listNo)->update($indexData);
         } else {
-            $table->insert($indexData);
+            $listNo = $table->insertGetId($indexData);
         }
+
+        app('db')->update('update house_index_v2 set skey=to_tsvector(?) where list_no=?', [$skey, $listNo]);
 
         // 附数据表
         $table = app('db')->table('house_data');
@@ -298,9 +303,7 @@ class MlsIndex extends Command
             'skey' => function ($d, $row, $indexData) {
                 $info = json_decode($indexData['info'], true);
                 $loc = trim(array_get($info, 'loc', ''));
-                $loc = preg_replace('/[^a-zA-Z0-9\s]/i', '', $loc);
-
-                return "to_tsvector('{$loc}')";
+                return preg_replace('/[^a-zA-Z0-9\s]/i', '', $loc);
             }
         ];
     }
