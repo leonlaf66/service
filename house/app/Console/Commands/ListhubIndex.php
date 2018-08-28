@@ -11,9 +11,6 @@ class ListhubIndex extends Command
     public function handle()
     {
         $mode  = $this->argument('mode', 'new');
-        if ($mode === 'v1tov2') {
-            return $this->v1tov2();
-        }
 
         $query = app('db')->connection('pgsql2')
             ->table('mls_rets_listhub')
@@ -49,36 +46,6 @@ class ListhubIndex extends Command
         app('db')->disconnect();
     }
 
-    public function v1tov2()
-    {
-        // 所取所有需要转接的listnos
-        $sql = 'select a.id from listhub_index a
-                  left join house_index_v2 b on a.id=b.list_no
-                  where a.city_id > 0 and b.list_no is null';
-
-        $listNos = array_map(function ($row) {
-            return $row->id;
-        }, app('db')->select($sql));
-
-        // 开始处理
-        $total = count($listNos);
-        foreach ($listNos as $listNo) {
-            $row = app('db')->connection('pgsql2')
-                ->table('mls_rets_listhub')
-                ->select('list_no', 'state', 'prop_type', 'xml', 'status', 'latitude', 'longitude', 'last_update_date')
-                ->where('list_no', '=', $listNo)
-                ->first();
-
-            $this->processMessageOutput($total);
-            if ($row) {
-                $this->processRow($row);
-            }
-        }
-
-        app('db')->connection('pgsql2')->disconnect();
-        app('db')->disconnect();
-    }
-
     public function processRow(& $row)
     {
         $fieldMaps = $this->getFieldMaps();
@@ -95,6 +62,10 @@ class ListhubIndex extends Command
             unset($indexData);
             return;
         }
+        if (floatval($indexData['list_price']) <= 0) {
+            unset($indexData);
+            return;
+        }
 
         $listNo = object_get($row, 'list_no');
 
@@ -107,6 +78,7 @@ class ListhubIndex extends Command
         }
 
         // 附数据
+        /*
         $table = app('db')->table('house_data');
 
         if ($table->where('list_no', $listNo)->count() > 0) {
@@ -119,6 +91,7 @@ class ListhubIndex extends Command
                 'orgi_data' => $xmlString
             ]);
         }
+        */
 
         $this->processCases($xmlDoc, $row); // 缺失数据汇报给listhub官方
 
@@ -134,6 +107,18 @@ class ListhubIndex extends Command
             'list_price' => function ($d) {
                 return get_xml_text($d, 'ListPrice');
             },
+            'prop_type' => function ($d, $row) {
+                $propTypeName = get_xml_text($d, 'PropertyType');
+                $propSubTypeName = get_xml_text($d, 'PropertySubType');
+
+                return get_listhub_prop_type($propTypeName, $propSubTypeName);
+            },
+            'city_id' => function ($d, $row) {
+                $state = $row->state;
+                $cityName = get_xml_text($d, 'Address/City');
+                return app('App\Repositories\Listhub\City')->findIdByName($state, $cityName);
+            },
+            /*
             'list_date' => function ($d, $row) {
                 $listDate = get_xml_text($d, 'ListingDate');
                 if (!$listDate || strlen($listDate) === 0) {
@@ -159,13 +144,11 @@ class ListhubIndex extends Command
             },
             'parking_spaces' => function ($d) {
                 return get_xml_text($d, 'DetailedCharacteristics/NumParkingSpaces');
+            },*/
+            'taxes' => function ($d) {
+                return get_xml_text($d, 'Taxes/Tax/Amount');
             },
-            'prop_type' => function ($d, $row) {
-                $propTypeName = get_xml_text($d, 'PropertyType');
-                $propSubTypeName = get_xml_text($d, 'PropertySubType');
-
-                return get_listhub_prop_type($propTypeName, $propSubTypeName);
-            },
+            /*
             'latlng' => function ($d, $row) {
                 $lat = object_get($row, 'latitude');
                 $lon = object_get($row, 'longitude');
@@ -226,11 +209,6 @@ class ListhubIndex extends Command
             'postal_code' => function ($d, $row) {
                 return object_get($d, 'zip_code');
             },
-            'city_id' => function ($d, $row) {
-                $state = $row->state;
-                $cityName = get_xml_text($d, 'Address/City');
-                return app('App\Repositories\Listhub\City')->findIdByName($state, $cityName);
-            },
             'parent_city_id' => function ($d, $row) { // 处理CA的子城市
                 if ($row->state !== 'CA') {
                     return null;
@@ -266,7 +244,7 @@ class ListhubIndex extends Command
             },
             'index_at' => function () {
                 return date('Y-m-d H:i:s');
-            },
+            },*/
             'info' => function ($d, $row, $indexData) {
                 $state = strtoupper(array_get($indexData, 'area_id'));
                 $cityId = array_get($indexData, 'city_id');
@@ -301,18 +279,20 @@ class ListhubIndex extends Command
                     'is_sd' => false,
                     'loc' => $location,
                     'city_name' => $cities[$cityId] ?? ['', ''],
+                    'area' => null,
                     'photo_count' => $photoCount
                 ];
 
                 return json_encode($data);
             },
+            /*
             'skey' => function ($d, $row, $indexData) {
                 $info = json_decode($indexData['info'], true);
                 $loc = trim(array_get($info, 'loc', ''));
                 $loc = preg_replace('/[^a-zA-Z0-9\s]/i', '', $loc);
 
                 return "to_tsvector('{$loc}')";
-            }
+            }*/
         ];
     }
 

@@ -11,10 +11,6 @@ class MlsIndex extends Command
     public function handle()
     {
         $mode  = $this->argument('mode', 'new');
-        if ($mode === 'v1tov2') {
-            return $this->v1tov2();
-        }
-
         $query = app('db')->connection('pgsql2')
             ->table('mls_rets')
             ->select('update_date', 'est_sale', 'estimation', 'json_data')
@@ -40,36 +36,6 @@ class MlsIndex extends Command
                 $self->processMessageOutput($total);
             }
         });
-
-        app('db')->connection('pgsql2')->disconnect();
-        app('db')->disconnect();
-    }
-
-    public function v1tov2()
-    {
-        // 所取所有需要转接的listnos
-        $sql = 'select a.id from house_index a
-                  left join house_index_v2 b on a.id::varchar=b.list_no
-                  where b.list_no is null';
-
-        $listNos = array_map(function ($row) {
-            return $row->id;
-        }, app('db')->select($sql));
-
-        // 开始处理
-        $total = count($listNos);
-        foreach ($listNos as $listNo) {
-            $row = app('db')->connection('pgsql2')
-                ->table('mls_rets')
-                ->select('update_date', 'est_sale', 'estimation', 'json_data')
-                ->where('list_no', '=', $listNo)
-                ->first();
-
-            $this->processMessageOutput($total);
-            if ($row) {
-                $this->processRow($row);
-            }
-        }
 
         app('db')->connection('pgsql2')->disconnect();
         app('db')->disconnect();
@@ -115,12 +81,17 @@ class MlsIndex extends Command
     public function getFieldMaps()
     {
         return [
+            /*base 任可时候不可缺*/
             'list_no' => function ($d) {
                 return array_get($d, 'list_no');
             },
             'list_price' => function ($d) {
                 return array_get($d, 'list_price');
             },
+            'prop_type' => function ($d) {
+                return array_get($d, 'prop_type');
+            },
+            /*
             'list_date' => function ($d) {
                 $listDate = array_get($d, 'list_date');
                 $listDate = str_replace('+00', '', $listDate);
@@ -146,9 +117,11 @@ class MlsIndex extends Command
             'parking_spaces' => function ($d) {
                 return array_get($d, 'parking_spaces');
             },
-            'prop_type' => function ($d) {
-                return array_get($d, 'prop_type');
+            */
+            'taxes' => function ($d) {
+                return array_get($d, 'taxes');
             },
+            /*
             'latlng' => function ($d) {
                 $lat = array_get($d, 'latitude');
                 $lon = array_get($d, 'longitude');
@@ -258,6 +231,7 @@ class MlsIndex extends Command
             'index_at' => function () {
                 return date('Y-m-d H:i:s');
             },
+            */
             'info' => function ($d, $row, $indexData) {
                 $cityId = array_get($indexData, 'city_id');
                 $cities = (function () {
@@ -317,12 +291,14 @@ class MlsIndex extends Command
                 $data = [
                     'is_sd' => $isSd,
                     'loc' => $location,
+                    'sub_prop_name' => '',
                     'city_name' => $cities[$cityId] ?? ['', ''],
+                    'area' => $d['area'] ?? null,
                     'photo_count' => $d['photo_count']
                 ];
 
                 return json_encode($data);
-            },
+            },/*
             'skey' => function ($d, $row, $indexData) {
                 $info = json_decode($indexData['info'], true);
                 $loc = trim(array_get($info, 'loc', ''));
@@ -330,6 +306,7 @@ class MlsIndex extends Command
 
                 return "to_tsvector('{$loc}')";
             }
+            */
         ];
     }
 
