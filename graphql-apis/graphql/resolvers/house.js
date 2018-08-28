@@ -6,6 +6,7 @@ import searchApplyTo from './house/utils/searchApplyTo'
 import houseFields from './house/@fields'
 import houseDetail from './house/detail'
 import { house as houseLoader } from './house/loaders'
+import { ApolloError } from 'apollo-server'
 
 module.exports = {
   House: {
@@ -13,13 +14,21 @@ module.exports = {
     loc: houseFields.loc,
     photo_cnt: houseFields.photo_cnt,
     photo: houseFields.photo,
+    photos: houseFields.photos,
     roi: houseFields.roi,
+    area: houseFields.area,
     prop: d => d.prop_type,
     price: d => d.list_price,
     date: d => d.list_date,
     beds: d => d.no_beds,
     baths: d => d.no_baths,
     zip_code: d => d.postal_code,
+    parking: d => d.parking_spaces,
+    garage: d => d.garage_spaces,
+    est_sale: d => d.est_sale,
+    taxes: d => d.taxes,
+    estimation: d => d.estimation,
+    is_in_sd: d => d.info.is_sd,
     polygons: houseFields.polygons,
     details: houseDetail,
     associated_houses
@@ -30,6 +39,7 @@ module.exports = {
   },
   Query: {
     search_houses,
+    map_search_houses,
     house,
     houses,
     nearby_houses,
@@ -57,10 +67,59 @@ async function search_houses (_, {only_rental, q, filters, sort, first, skip }, 
 }
 
 /**
+ * 搜索地图房源
+ */
+async function map_search_houses(d, {only_rental, q, filters, first, includePolygons }, ctx) {
+  let query = knex('house_index_v2')
+    .select('list_no', 'list_price', 'prop_type', 'latlng', 'area_id', 'city_id')
+    .where('area_id', ctx.area_id)
+    .where('city_id', '>', 0)
+    .whereRaw('latlng is not null')
+    .where('is_online_abled', true)
+    .limit(first)
+
+  // 售房/租房区分
+  query.where('prop_type', (only_rental ? '=' : '<>'), 'RN')
+
+  // 应用搜索条件
+  await searchApplyTo(ctx, query, q, filters)
+  let rows = await query;
+
+  // build并返回
+  let items = rows.map(d => {
+    return [
+      d.list_no,
+      Number.parseInt(d.list_price) / 10000,
+      d.prop_type,
+      d.latlng[0],
+      d.latlng[1]
+    ].join('|')
+  })
+
+  // polygons(根据第一个房源city_id)
+  if (includePolygons) {
+    let polygons = []
+
+    if (rows.length > 0) {
+      let row = rows[0]
+      row.__is_detail = true
+      polygons = await houseFields.polygons(row, {}, ctx)
+    }
+
+    return { polygons, items }
+  }
+
+  return items
+}
+
+/**
  * 获取房源详情
  */
 function house (_, { id }, ctx, info) {
   return houseLoader.load(id).then(d => {
+    if (!d) {
+      throw new ApolloError('不存在的房源ID', '404')
+    }
     d.__is_detail = true
     return d
   })

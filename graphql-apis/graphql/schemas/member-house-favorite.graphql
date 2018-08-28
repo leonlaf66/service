@@ -1,3 +1,4 @@
+# 房屋收藏类型
 type HouseFavorite {
   id: ID!
   created_at: Date
@@ -5,15 +6,18 @@ type HouseFavorite {
   house: House
 }
 
+# 房屋收藏分页结果类型
 type HouseFavoritePagination {
   total: Int
   items: [HouseFavorite]
 }
 
 type Query {
+  # 当前用户房源收藏列表
   find_favorite_houses (rental: Boolean = false, first:Int = 15, skip: Int = 0): HouseFavoritePagination
 }
 
 type Mutation {
+  # 删除指定房源收藏
   remove_favorite_house(id:Int) : Boolean
 }

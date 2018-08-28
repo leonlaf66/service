@@ -1,15 +1,18 @@
+# 注册输入类型
 input RegisterForm {
   email: String!
   password: String!
   confirm_password: String!
 }
 
+# 登陆响应类型
 type LoginResponse {
   success: Boolean
   errors: JSON
   member: Member
 }
 
+# 注册响应类型
 type RegisterResponse {
   success: Boolean
   errors: JSON
@@ -17,8 +20,12 @@ type RegisterResponse {
 }
 
 type Mutation {
+  # 一般登陆
   login (username: String!, password: String!) : LoginResponse
+  # open id登陆
   openid_login (open_id: String!) : Member
+  # 用户注册
   register (form: RegisterForm) : RegisterResponse
+  # 找回密码
   reset_password (email: String!) : Boolean
 }

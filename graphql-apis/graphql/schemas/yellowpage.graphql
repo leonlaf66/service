@@ -1,3 +1,4 @@
+# 黄页类型
 type YellowPage {
  id: ID!
  name: String
@@ -15,17 +16,20 @@ type YellowPage {
  comments: Int
 }
 
+# 黄页分页结果类型
 type YellowPagePagination {
   total: Int
   items: [YellowPage]
 }
 
+# 黄页分类类型
 type YellowPageType {
   id: ID!
   name: String
   photo: String
 }
 
+# 黄页分组类型(一般应用于首页)
 type GroupYellowPage {
   id: ID!
   name: String
@@ -35,12 +39,17 @@ type GroupYellowPage {
 
 # 黄页查询类
 type Query {
+  # 获取分组过后的黄页(用于首页)
   grouped_yellow_page: [GroupYellowPage]
+  # 获取推荐黄页
   top_yellow_pages: [YellowPage]
+  # 获取黄页分类列表
   yellow_page_types: [YellowPageType]
+  # 获取黄页列表
   search_yellow_page (type_id: Int = 0, first: Int = 15, skip: Int = 0): YellowPagePagination
 }
 
 type Mutation {
+  # 黄页点击记录
   yellow_page_hit (id: ID!) : YellowPage
 }

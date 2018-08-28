@@ -1,4 +1,4 @@
-# 新闻
+# 新闻类型
 type News {
   id: ID!
   title: String
@@ -13,7 +13,7 @@ type News {
   meta_description: String
 }
 
-# 新闻分页
+# 新闻分页结果类型
 type NewsPagination {
   total: Int
   items: [News]

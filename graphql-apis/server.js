@@ -1,44 +1,41 @@
 import cpusReady from './cluster'
 import Koa from 'koa'
-import { ApolloServer, defaultPlaygroundOptions } from 'apollo-server-koa'
+import { ApolloServer } from 'apollo-server-koa'
 import knex from 'knex'
 import cors from 'koa2-cors'
 import schema from './graphql'
 import staticData from './data'
 import config from 'config'
 
-defaultPlaygroundOptions.settings['editor.cursorShape'] = 'line'
+const server = new ApolloServer({
+  schema,
+  context: ({ ctx }) => ({
+    headers: ctx.req.headers,
+    area_id: ctx.req.headers['area-id'],
+    app_token: ctx.req.headers['app-token'],
+    lang: ctx.req.headers.language,
+    access_token: ctx.req.headers['access-token'],
+    user: ctx.headers.user,
+    staticData,
+    tt: (en, zh) => {
+      if (en instanceof Array) { zh = en[1]; en = en[0] }
+      if (!en) { en = zh }
+      if (!zh) { zh = en }
+      return ctx.req.headers.language === 'en-US' ? en : zh
+    }
+  }),
+  playground: true,
+  introspection: true
+})
 
 const knexDb = knex(config.db)
 
 cpusReady ( () => {
-  const server = new ApolloServer({
-    schema,
-    context: ({ ctx }) => ({
-      headers: ctx.req.headers,
-      area_id: ctx.req.headers['area-id'],
-      app_token: ctx.req.headers['app-token'],
-      lang: ctx.req.headers.language,
-      access_token: ctx.req.headers['access-token'],
-      user: ctx.headers.user,
-      staticData,
-      tt: (en, zh) => {
-        if (en instanceof Array) { zh = en[1]; en = en[0] }
-        if (!en) { en = zh }
-        if (!zh) { zh = en }
-        return ctx.req.headers.language === 'en-US' ? en : zh
-      }
-    }),
-    playground: true,
-    introspection: true
-  })
-
   const app = new Koa()
 
-  // 具体参数我们在后面进行解释
   app.use(cors({
       origin: function (ctx) {
-          return "*"; // 允许来自所有域名请求
+          return "*";
       },
       exposeHeaders: ['WWW-Authenticate', 'Server-Authorization'],
       maxAge: 5,
@@ -48,17 +45,27 @@ cpusReady ( () => {
   }))
 
   app.use(async (ctx, next) => {
+    // query to headers
+    ['app-token', 'area-id', 'language', 'access-token'].forEach(field => {
+      if (Object.keys(ctx.query).includes(field)) {
+        ctx.headers[field] = ctx.query[field]
+      }
+    })
+
+    // token
     if (ctx.headers['app-token'] !== config.appToken) {
       ctx.body = {
         'error': 'Authentication failed!'
       }
-      return
+      return;
     }
 
+    // language
     if (!ctx.headers.language) {
       ctx.headers.language = 'zh-CN'
     }
 
+    // access-token
     const accessToken = ctx.headers['access-token']
     if (accessToken) {
       let user = await knexDb('member')
@@ -78,6 +85,9 @@ cpusReady ( () => {
         return
       }
     }
+
+    // playground configs
+    server.playgroundOptions.settings['editor.cursorShape'] = 'line'
 
     await next()
   })

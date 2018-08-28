@@ -1,9 +1,11 @@
+# 大区统计类型
 type AreaSummary {
   house_sells:Int
   house_rents:Int
   house_markets: JSON
 }
 
+# 大区类型
 type Area {
   id: ID!
   name: String!
@@ -16,12 +18,9 @@ type Area {
   lastest_news(first:Int = 10) : [News]
 }
 
-input IntegerRangeInput {
-  from: Int!
-  to: Int!
-}
-
 type Query {
+  # 大区列表
   areas : [Area]
+  # 大区详情
   area(id: ID!): Area
 }

@@ -1,3 +1,4 @@
+# 地铁线类型
 type SubwayLine {
  id: ID!
  code: String
@@ -7,6 +8,7 @@ type SubwayLine {
  stations: [SubwayStation]
 }
 
+# 地铁站点类型
 type SubwayStation {
   id: ID!
   name: String
@@ -14,5 +16,6 @@ type SubwayStation {
 }
 
 type Query {
+  # 返回地铁线及所有站点
   subway : [SubwayLine]
 }

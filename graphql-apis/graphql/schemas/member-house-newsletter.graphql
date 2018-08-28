@@ -1,3 +1,4 @@
+# 房屋订阅类型
 type HouseNewsletter {
   id: ID!
   name: String
@@ -6,16 +7,20 @@ type HouseNewsletter {
   data: JSON
 }
 
+# 房屋订阅分页结果类型
 type HouseNewsletterPagination {
   total: Int
   items: [HouseNewsletter]
 }
 
 type Query {
+  # 当前用户订阅列表
   find_house_newsletter (first:Int = 15, skip: Int = 0): HouseNewsletterPagination
 }
 
 type Mutation {
+  # 创建一个订阅
   create_house_newsletter (data: JSON) : HouseNewsletter
+  # 删除一个订阅
   remove_house_newsletter (id:Int) : Boolean
 }

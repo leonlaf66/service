@@ -20,14 +20,14 @@ export default async (d, args, ctx) => {
 }
 
 async function getHouseData(areaId, listNo) {
-  return await knex('house_data_v2')
+  return await knex('house_data')
     .where('list_no', listNo)
     .first()
     .then(async r => {
       if (areaId === 'ma') {
-        return r.mls_data
+        return JSON.parse(r.orgi_data)
       }
-      return xmlRender(`<?xml version="1.0" encoding="UTF-8"?>${r.listhub_data}</xml>`)
+      return xmlRender(`<?xml version="1.0" encoding="UTF-8"?>${r.orgi_data}</xml>`)
     })
 }
 

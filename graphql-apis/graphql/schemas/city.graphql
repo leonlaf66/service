@@ -1,0 +1,5 @@
+# 城市相关查询类
+type Query {
+  # 城市地图边界
+  city_polygons (name: String!) : JSON
+}

@@ -11,13 +11,13 @@ export default async () => {
     let town = towns[k]
     items.push({
       'title': town.name,
-      'desc': town.name_cn + 'MA'
+      'desc': town.name_cn + ', MA'
     })
 
     if (town.name_cn) {
       items.push({
         'title': town.name_cn,
-        'desc': town.name + 'MA'
+        'desc': town.name + ', MA'
       })
     }
   }
@@ -30,7 +30,7 @@ export default async () => {
     let zipcode = zipcodes[k]
     items.push({
       'title': zipcode.zip,
-      'desc': zipcode.city_name + zipcode.city_name_cn + 'MA'
+      'desc': zipcode.city_name + zipcode.city_name_cn + ', MA'
     })
   }
 

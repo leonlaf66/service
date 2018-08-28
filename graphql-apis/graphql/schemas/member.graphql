@@ -34,5 +34,6 @@ type Query {
 }
 
 type Mutation {
+  # 修改用户信息
   modify_member_profile (profile: MemberProfileInput!) : MemberProfile
 }

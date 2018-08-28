@@ -1,14 +1,18 @@
+# 评论页类型
 enum CommentPageType {
   yellowpage
   news
 }
 
+# 评论页
 type CommentPage {
   id: ID!
   rating: Float
+  # 评论结果分页结果
   results: CommentPagination
 }
 
+# 评论
 type Comment {
   id: ID!
   rating: Float
@@ -17,15 +21,18 @@ type Comment {
   created_at: Date
 }
 
+# 评论结果分页结果
 type CommentPagination {
   total: Int
   items: [Comment]
 }
 
 type Query {
+  # 查询评论
   find_comments(page_type: CommentPageType = yellowpage, type_id:ID!, first:Int = 15, skip:Int = 0) : CommentPage
 }
 
 type Mutation {
-  created_comment (page_id: CommentPageType, type_id: ID!, content: String, rating: Float) : Comment
+  # 创建评论
+  create_comment (page_id: CommentPageType, type_id: ID!, content: String, rating: Float) : Comment
 }

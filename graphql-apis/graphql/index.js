@@ -5,6 +5,8 @@ import { fileLoader, mergeTypes } from 'merge-graphql-schemas'
 import fs from 'fs'
 import { merge } from 'lodash'
 
+import DateScalarType from './scalars/date'
+
 const syncTypeDefs = mergeTypes(fileLoader(__dirname.concat('/schemas')), { all: true })
 
 const syncResolvers = fs.readdirSync(__dirname.concat('/resolvers')).filter(file => {
@@ -15,14 +17,7 @@ const syncResolvers = fs.readdirSync(__dirname.concat('/resolvers')).filter(file
 
 const resolvers = merge({}, {
     JSON: GraphQLJSON,
-    Date: {
-      serialize (v) {
-        return new Date(v)
-      },
-      parse (v) {
-        return (new Date(v)).toString()
-      }
-    }
+    Date: DateScalarType
   },
   ...syncResolvers
 )

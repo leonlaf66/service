@@ -11,7 +11,7 @@ module.exports = {
     find_comments
   },
   Mutation: {
-    created_comment
+    create_comment
   }
 }
 
@@ -50,7 +50,7 @@ async function find_comments (_, { page_type, type_id, first, skip }) {
   }
 }
 
-async function created_comment (_, { page_type, type_id, content, rating }, { user }) {
+async function create_comment (_, { page_type, type_id, content, rating }, { user }) {
   // 获取或创建page
   const page_url = `${page_type}/${type_id}`
   let typeRow = await knex('comment_page')

@@ -43,26 +43,15 @@ export function format (type, value, lang) {
         return { value: value === 'true' ? '有' : '无' }
       }
       return { value: value === 'true' ? 'Yes' : 'No' }
-    
+    case 'price':
     case 'money':
-      return lang === 'zh-CN' ? { value, suffix: '美元' } : {prefix: '$', value}
+      if (lang === 'zh-CN') {
+        if (Number.parseInt(value) > 10000) {
+          value = Number.parseFloat(value * 1.0 / 10000).toFixed(2);
+          return { value, suffix: '万美元' }
+        }
+        return { value, suffix: '美元' }
+      }
+      return {prefix: '$', value}
   }
 }
-
-/*
-if (intval($data['value']) === 0) {
-    $data['is_empty'] = true;
-    break;
-}
-if (is_chinese()) {
-    $data = array_merge($data, [
-        'value' => number_format(intval(floatval($data['value']) * 0.092903), 0),
-        'suffix' => '平方米'
-    ]);
-} else {
-    $data = array_merge($data, [
-        'value' => number_format(floatval($data['value']), 0),
-        'suffix' => 'Sq.Ft'
-    ]);
-}
-*/

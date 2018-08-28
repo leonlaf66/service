@@ -44,7 +44,7 @@ export default async (areaId) => {
 
     items[zipCode] = {
       'title': zipCode,
-      'desc': row.name + ',' + (row.name_cn ? row.name_cn : '暂无中文名') + ',' + stateId
+      'desc': row.name + ', ' + (row.name_cn ? row.name_cn : '暂无中文名') + ', ' + stateId
     }
   }
 

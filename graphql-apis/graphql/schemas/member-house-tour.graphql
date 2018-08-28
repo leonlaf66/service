@@ -1,3 +1,4 @@
+# 预约看房类型
 type HouseTour {
   id: ID!
   date_start: Date
@@ -6,15 +7,18 @@ type HouseTour {
   house: House
 }
 
+# 预约看房分页结果类型
 type HouseTourPagination {
   total: Int
   items: [HouseTour]
 }
 
 type Query {
+  # 获取预约看房列表
   find_house_tour (first:Int = 15, skip: Int = 0): HouseTourPagination
 }
 
 type Mutation {
+  # 删除一个预约看房
   remove_house_tour (id:Int) : Boolean
 }

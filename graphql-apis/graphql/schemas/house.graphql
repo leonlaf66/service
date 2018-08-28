@@ -5,8 +5,9 @@ type House {
   loc: String
   prop: String
   photo(idx:Int = 1, w:Int = 800, h:Int = 600): String
+  photos(w:Int=800, h:Int=600): [String!]
   price: Float
-  date: Date
+  date(format: String = "YYYY-MM-DD HH:ii:ss"): Date
   beds: Int
   baths: [Int]
   zip_code: String
@@ -14,7 +15,14 @@ type House {
   latlng: [Float]
   photo_cnt: Int
   square_feet: Int
+  parking:Int
+  garage:Int
+  est_sale:Float
+  is_in_sd: Boolean
   area_id: String
+  estimation:JSON
+  area: String
+  taxes:Float
   roi: JSON
   details: JSON
   polygons: JSON
@@ -38,17 +46,35 @@ type HousePagination {
 
 # 房源筛选输入
 input HouseFiltersInput {
+  # 分类, SF/MF/CC/CI/BU/LD
   props: [String!]
+  # 价格范围(单位:美元)
   price: FloatRangeInput
+  # 城市ID
   city_id: Int
-  square_feet: FloatRangeInput,
+  # 多城市ID
+  city_ids: [Int!]
+  # 面积范围(单位:原始)
+  square: FloatRangeInput,
+  # 卧室数+
   beds: Int
+  # 卫生间数+
   baths: Int
-  list_days: Int
-  parking_spaces: Int
-  garage_spaces: Boolean
+  # 上市天数 1最新 2本周 3本月
+  ldays: Int
+  # 车位数+
+  parking: Int
+  # 是否包含车库
+  garage: Boolean
+  # 坐标周边(默认2公里范围内)
+  latlng: LatLngInput
+  # 地铁线
+  subway_line:Int
+  # 地铁站点
+  subway_stations: [Int!]
 }
 
+# 图片尺寸参数类型
 input PhotoSizeInput {
   w: Int
   h: Int
@@ -64,6 +90,8 @@ type HouseSummeries {
 type Query {
   # 搜索房源, 返回房源分页对象，包含results房源列表
   search_houses (only_rental: Boolean = false, q: String = "", filters: HouseFiltersInput, sort: Int = 1, first: Int = 15, skip: Int = 0) : HousePagination
+  # 搜索地图房源
+  map_search_houses (only_rental: Boolean = false, q: String = "", filters: HouseFiltersInput, first: Int = 1000, includePolygons: Boolean = false) : JSON
   # 获取一个房源的详情
   house (id: ID!) : House
   # 根据ids获取房源列表

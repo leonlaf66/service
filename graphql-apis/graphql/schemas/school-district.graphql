@@ -1,3 +1,4 @@
+# 学区类型
 type SchoolDistrict {
   id: ID!
   code: String
@@ -20,6 +21,8 @@ type SchoolDistrict {
 }
 
 type Query {
+  # 返回学区列表
   school_district_list : [SchoolDistrict]
+  # 指定学区信息
   school_district (id: ID!) : SchoolDistrict
 }
