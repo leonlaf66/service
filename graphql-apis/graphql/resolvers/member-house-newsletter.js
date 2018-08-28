@@ -28,7 +28,6 @@ async function newsletter_data (d, args, { tt }) {
   }
 
   if (data.price_range) {
-    console.log(data.price_range)
     data.price_range = data.price_range.split('-')
   }
   

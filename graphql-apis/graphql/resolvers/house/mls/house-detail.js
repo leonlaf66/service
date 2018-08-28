@@ -100,7 +100,7 @@ function getFieldValue(data, field, opts, referenceFields, lang = 'zh-CN') {
       entity.value = entity.value.split(',').map(value => {
         if (referenceFields[field] && referenceFields[field][value]) {
           value = referenceFields[field][value]
-          return 'zh-CN' && value[1] ? value[0] : value[0]
+          return lang === 'zh-CN' && value[1] ? value[1] : value[0]
         }
       }).filter(value => {
         return value

@@ -16,6 +16,14 @@ const photo = (d, { idx, w, h }) => {
 export default {
   nm (d, args, { lang }) {
     let items = []
+    if (!d.info) d.info = {
+      city_name: ['', ''],
+      is_sd: false,
+      photo_count: 0,
+      area: '',
+      loc: ''
+    }
+    
     if (lang === 'zh-CN') {
       items.push(d.info.city_name[1] + filter.propName(d.prop_type)[1])
       if (d.info.is_sd) {
