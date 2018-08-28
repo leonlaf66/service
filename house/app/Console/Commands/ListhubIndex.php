@@ -78,7 +78,6 @@ class ListhubIndex extends Command
         }
 
         // 附数据
-        /*
         $table = app('db')->table('house_data');
 
         if ($table->where('list_no', $listNo)->count() > 0) {
@@ -91,7 +90,6 @@ class ListhubIndex extends Command
                 'orgi_data' => $xmlString
             ]);
         }
-        */
 
         $this->processCases($xmlDoc, $row); // 缺失数据汇报给listhub官方
 
@@ -121,7 +119,6 @@ class ListhubIndex extends Command
             'area_id' => function ($d, $row) {
                 return strtolower($row->state);
             },
-            /*
             'list_date' => function ($d, $row) {
                 $listDate = get_xml_text($d, 'ListingDate');
                 if (!$listDate || strlen($listDate) === 0) {
@@ -151,7 +148,6 @@ class ListhubIndex extends Command
             'taxes' => function ($d) {
                 return get_xml_text($d, 'Taxes/Tax/Amount');
             },
-            /*
             'latlng' => function ($d, $row) {
                 $lat = object_get($row, 'latitude');
                 $lon = object_get($row, 'longitude');
@@ -244,7 +240,7 @@ class ListhubIndex extends Command
             },
             'index_at' => function () {
                 return date('Y-m-d H:i:s');
-            },*/
+            },
             'info' => function ($d, $row, $indexData) {
                 $state = strtoupper(array_get($indexData, 'area_id'));
                 $cityId = array_get($indexData, 'city_id');
@@ -285,14 +281,13 @@ class ListhubIndex extends Command
 
                 return json_encode($data);
             },
-            /*
             'skey' => function ($d, $row, $indexData) {
                 $info = json_decode($indexData['info'], true);
                 $loc = trim(array_get($info, 'loc', ''));
                 $loc = preg_replace('/[^a-zA-Z0-9\s]/i', '', $loc);
 
                 return "to_tsvector('{$loc}')";
-            }*/
+            }
         ];
     }
 

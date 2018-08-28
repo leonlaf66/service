@@ -94,7 +94,6 @@ class MlsIndex extends Command
             'city_id' => function ($d) {
                 return app('App\Repositories\Mls\City')->findIdByCode('MA', array_get($d, 'town'));
             },
-            /*
             'list_date' => function ($d) {
                 $listDate = array_get($d, 'list_date');
                 $listDate = str_replace('+00', '', $listDate);
@@ -120,11 +119,9 @@ class MlsIndex extends Command
             'parking_spaces' => function ($d) {
                 return array_get($d, 'parking_spaces');
             },
-            */
             'taxes' => function ($d) {
                 return array_get($d, 'taxes');
             },
-            /*
             'latlng' => function ($d) {
                 $lat = array_get($d, 'latitude');
                 $lon = array_get($d, 'longitude');
@@ -231,7 +228,6 @@ class MlsIndex extends Command
             'index_at' => function () {
                 return date('Y-m-d H:i:s');
             },
-            */
             'info' => function ($d, $row, $indexData) {
                 $cityId = array_get($indexData, 'city_id');
                 $cities = (function () {
@@ -298,7 +294,7 @@ class MlsIndex extends Command
                 ];
 
                 return json_encode($data);
-            },/*
+            },
             'skey' => function ($d, $row, $indexData) {
                 $info = json_decode($indexData['info'], true);
                 $loc = trim(array_get($info, 'loc', ''));
@@ -306,7 +302,6 @@ class MlsIndex extends Command
 
                 return "to_tsvector('{$loc}')";
             }
-            */
         ];
     }
 
