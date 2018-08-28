@@ -13,7 +13,9 @@ const renderFieldMap = (rule, field, lang) => {
 
   // 语言配置
   if (rule['zh-CN']) {
-    map['zh-CN'] = renderFieldMap(rule['zh-CN'], field, lang)
+    if (lang === 'zh-CN') {
+      map['zh-CN'] = renderFieldMap(rule['zh-CN'], field, lang)
+    }
   }
 
   // values配置
@@ -46,7 +48,7 @@ const renderFieldMap = (rule, field, lang) => {
 export default (data, rules, referenceFields, ctx) => {
   const groups = rules.groups.group.map(group => {
     // 分组标题
-    let title = localizes[group.title._text]
+    let title = group.title._text
     if (ctx.lang === 'zh-CN' && localizes[title]) {
       title = localizes[title]
     }
@@ -98,7 +100,7 @@ function getFieldValue(data, field, opts, referenceFields, lang = 'zh-CN') {
       entity.value = entity.value.split(',').map(value => {
         if (referenceFields[field] && referenceFields[field][value]) {
           value = referenceFields[field][value]
-          return 'zh-CN' && value[1] ? value[1] : value[0]
+          return 'zh-CN' && value[1] ? value[0] : value[0]
         }
       }).filter(value => {
         return value
