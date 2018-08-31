@@ -55,7 +55,9 @@ class Dashboard
         $query = \App\Models\HouseIndex::query();
         $query->where('area_id', $areaId);
         $query->whereIn('prop_type', ['MF', 'SF', 'CC']);
+        $query->whereNotNull('city_id');
         $query->where('list_price', '>', 30000);
+        $query->where(['is_online_abled' => true]);
         $query->orderBy('update_at', 'desc');
         $query->limit($limit);
 
