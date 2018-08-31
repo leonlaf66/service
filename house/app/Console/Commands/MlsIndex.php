@@ -63,7 +63,7 @@ class MlsIndex extends Command
         if ($table->where('list_no', $listNo)->count() > 0) {
             $table->where('list_no', $listNo)->update($indexData);
         } else {
-            $listNo = $table->insertGetId($indexData);
+            $table->insert($indexData);
         }
 
         app('db')->update('update house_index_v2 set skey=to_tsvector(?) where list_no=?', [$skey, $listNo]);

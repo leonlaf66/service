@@ -71,18 +71,19 @@ class ListhubIndex extends Command
 
         // 主表
         $table = app('db')->table('house_index_v2');
-        $skey = $indexData['skey'];
-        unset($indexData['skey']);
-
+        
         if ($table->where('list_no', $listNo)->count() > 0) {
             $table->where('list_no', $listNo)->update($indexData);
         } else {
-            $listNo = $table->insertGetId($indexData);
+            $table->insert($indexData);
         }
-
+        /*
+        $skey = $indexData['skey'];
+        unset($indexData['skey']);
         app('db')->update('update house_index_v2 set skey=to_tsvector(?) where list_no=?', [$skey, $listNo]);
-
+        */
         // 附数据
+        /*
         $table = app('db')->table('house_data');
 
         if ($table->where('list_no', $listNo)->count() > 0) {
@@ -95,8 +96,9 @@ class ListhubIndex extends Command
                 'orgi_data' => $xmlString
             ]);
         }
+        */
 
-        $this->processCases($xmlDoc, $row); // 缺失数据汇报给listhub官方
+        //$this->processCases($xmlDoc, $row); // 缺失数据汇报给listhub官方
 
         unset($indexData);
     }
@@ -121,6 +123,10 @@ class ListhubIndex extends Command
                 $cityName = get_xml_text($d, 'Address/City');
                 return app('App\Repositories\Listhub\City')->findIdByName($state, $cityName);
             },
+            'mls_id' => function ($d, $row) {
+                return get_xml_text($d, 'MlsId');
+            }
+            /*
             'area_id' => function ($d, $row) {
                 return strtolower($row->state);
             },
@@ -291,6 +297,7 @@ class ListhubIndex extends Command
                 $loc = trim(array_get($info, 'loc', ''));
                 return preg_replace('/[^a-zA-Z0-9\s]/i', '', $loc);
             }
+            */
         ];
     }
 
