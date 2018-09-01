@@ -82,7 +82,6 @@ export default async function (ctx, query, q, filters, order = 1) {
       } else {
         q = q.replace(/\'/g, '').replace(/[\s]+/g, '&')
         const skey = `to_tsquery('english', '${q}')`
-
         query.whereRaw(`"skey" @@ ${skey}`)
         query.orderByRaw(`${skey} ASC`)
       }

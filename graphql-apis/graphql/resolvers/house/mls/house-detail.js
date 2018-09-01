@@ -87,7 +87,7 @@ function getFieldValue(data, field, opts, referenceFields, lang = 'zh-CN') {
   let entity = {}
 
   //获取真实值
-  entity.value = data[field]
+  entity.value = entity.raw_value = data[field]
 
   // filter
   if (opts.filter) {

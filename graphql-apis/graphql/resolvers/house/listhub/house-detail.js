@@ -115,6 +115,9 @@ function getFieldValue(data, field, opts, ctx) {
     }
   }
 
+  // format之间取保留数据
+  entity.raw_value = entity.value
+
   // format
   if (opts.format) {
     entity = _.merge({}, entity, format(opts.format, entity.value, ctx.lang))
@@ -128,6 +131,10 @@ function getFieldValue(data, field, opts, ctx) {
       const dicts = ctx.staticData(`listhub/langs/enums/${type}`)
       if (dicts[entity.value] && dicts[entity.value] !== '') {
         entity.value = dicts[entity.value]
+      } else { // 字典集合
+        entity.value = _.map(entity.value.split(','), (text) => {
+          return dicts[text] && dicts[text] !== '' ? dicts[text] : text
+        }).join(',')
       }
     }
   }
