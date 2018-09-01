@@ -119,7 +119,7 @@ function getFieldValue(data, field, opts, ctx) {
   entity.raw_value = entity.value
 
   // format
-  if (opts.format) {
+  if (entity.value && entity.value !== '' && opts.format) {
     entity = _.merge({}, entity, format(opts.format, entity.value, ctx.lang))
   }
 
