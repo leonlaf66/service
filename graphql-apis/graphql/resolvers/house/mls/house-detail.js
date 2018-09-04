@@ -87,7 +87,7 @@ function getFieldValue(data, field, opts, referenceFields, lang = 'zh-CN') {
   let entity = {}
 
   //获取真实值
-  entity.value = entity.raw_value = data[field]
+  entity.value = data[field]
 
   // filter
   if (opts.filter) {
@@ -107,6 +107,8 @@ function getFieldValue(data, field, opts, referenceFields, lang = 'zh-CN') {
       }).join(',')
     }
   }
+
+  entity.raw_value = entity.value
 
   // format
   if (opts.format) {
