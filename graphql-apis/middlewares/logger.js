@@ -8,6 +8,9 @@ export default async (ctx, next) => {
   if (ctx.request.method === 'POST') {
     let ipAddress = ctx.request.headers['ip-address']
     if (!ipAddress) return
+
+    if(ctx.request.body.operationName === 'IntrospectionQuery') return
+
     const geoData = getGeoData(ipAddress)
 
     writeLog(ctx.appid, geoData, {
