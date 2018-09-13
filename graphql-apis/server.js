@@ -1,8 +1,8 @@
 import cpusReady from './cluster'
 import Koa from 'koa'
 import { ApolloServer } from 'apollo-server-koa'
-import knex from 'knex'
-import cors from 'koa2-cors'
+import koaBody from 'koa-body'
+import middlewares from './middlewares'
 import schema from './graphql'
 import staticData from './data'
 import config from 'config'
@@ -28,70 +28,21 @@ const server = new ApolloServer({
   introspection: true
 })
 
-const knexDb = knex(config.db)
-
 cpusReady ( () => {
   const app = new Koa()
 
-  app.use(cors({
-      origin: function (ctx) {
-          return "*";
-      },
-      exposeHeaders: ['WWW-Authenticate', 'Server-Authorization'],
-      maxAge: 5,
-      credentials: true,
-      allowMethods: ['GET', 'POST', 'OPTIONS'],
-      allowHeaders: ['Content-Type', 'Authorization', 'Accept'],
-  }))
+  app.use(middlewares.cors)
+  app.use(middlewares.query2header)
+  app.use(middlewares.authentication)
+  app.use(middlewares.language)
+  app.use(middlewares.accessedUser)
+  app.use(koaBody());
+  app.use(middlewares.logger)
 
   app.use(async (ctx, next) => {
-    // query to headers
-    ['app-token', 'area-id', 'language', 'access-token'].forEach(field => {
-      if (Object.keys(ctx.query).includes(field)) {
-        ctx.headers[field] = ctx.query[field]
-      }
-    })
-
-    // token
-    if (ctx.headers['app-token'] !== config.appToken) {
-      ctx.body = {
-        'error': 'Authentication failed!'
-      }
-      return;
-    }
-
-    // language
-    if (!ctx.headers.language) {
-      ctx.headers.language = 'zh-CN'
-    }
-
-    // access-token
-    const accessToken = ctx.headers['access-token']
-    if (accessToken) {
-      let user = await knexDb('member')
-        .select('id')
-        .where('access_token', accessToken)
-        .first()
-
-      if (user) {
-        ctx.headers.user = {
-          id: user.id,
-          access_token: accessToken
-        }
-      } else {
-        ctx.body = {
-          'error': 'The user has authentication failed!'
-        }
-        return
-      }
-    }
-
-    // playground configs
     server.playgroundOptions.settings['editor.cursorShape'] = 'line'
-
     await next()
   })
-
   server.applyMiddleware({ app })
 
   const port = config.server.port
