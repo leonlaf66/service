@@ -49,9 +49,8 @@ class Handler extends ExceptionHandler
         if (empty($code) && method_exists($e, 'getStatusCode')) {
             $code = $e->getStatusCode();
         }
-
         $return = [
-            'code' => $code,
+            'code' => $e->getCode(),
             'message' => $e->getMessage(),
         ];
 
