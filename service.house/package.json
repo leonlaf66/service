@@ -1,0 +1,42 @@
+{
+  "name": "txk",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "start": "micro",
+  "scripts": {
+    "dev": "micro-dev",
+    "inspect": "node --inspect node_modules/.bin/micro-dev",
+    "start": "micro"
+  },
+  "dependencies": {
+    "apollo-server-micro": "^2.1.0",
+    "cache": "^2.1.0",
+    "config": "^2.0.1",
+    "dataloader": "^1.4.0",
+    "graphql": "0.13.1",
+    "graphql-type-json": "^0.2.1",
+    "knex": "^0.15.2",
+    "lodash": "4.17.4",
+    "merge-graphql-schemas": "^1.5.7",
+    "micro": "^9.3.3",
+    "micro-cors": "^0.1.1",
+    "microrouter": "^3.1.3",
+    "moment": "^2.22.2",
+    "numeral": "^2.0.6",
+    "pg": "^7.6.0",
+    "ttl-cache": "^1.0.2",
+    "validator": "^10.8.0",
+    "xml-js": "^1.6.8",
+    "xmldom": "^0.1.27",
+    "xpath": "^0.0.27"
+  },
+  "devDependencies": {
+    "babel-core": "6.26.3",
+    "babel-node-modules": "0.0.1",
+    "babel-plugin-transform-runtime": "6.23.0",
+    "babel-preset-latest-node": "1.0.0",
+    "babel-preset-stage-3": "6.24.1",
+    "micro-dev": "^3.0.0"
+  }
+}

@@ -1,0 +1,46 @@
+{
+  "market": {
+    "title": [
+      "Knowing The Marketing",
+      "市场 早知道"
+    ],
+    "info": [
+      "Experts review, professional comments, real-time data sharing, customer experience sharing.",
+      "房市热点冰点? 租金是涨是跌? 存量是放是缩? 专家点评, 专业分享, 实时数据, 一手分享"
+    ],
+    "targetUrl": "http:\/\/ny.usleju.cn\/zh\/news\/"
+  },
+  "select": {
+    "title": [
+      "Decision Helper",
+      "选房 帮你搜"
+    ],
+    "info": [
+      "Looking for rental properties? Our SMART SEARCH helps you locate right property!",
+      "租在哪里? 买在何地? 智能搜索, 省时省力的高性能选择"
+    ],
+    "targetUrl": "http:\/\/ny.usleju.cn\/zh\/house\/purchase\/?params=pt-sf2mf2cc"
+  },
+  "manage": {
+    "title": [
+      "Take Care Your Home",
+      "管房 有渠道"
+    ],
+    "info": [
+      "Whenever and wherever you are, we have house maintenance solution for you.",
+      "春夏秋冬, 房产的维护和保养管家中心资源共享"
+    ],
+    "targetUrl": "http:\/\/ny.usleju.cn\/zh\/pro-service\/"
+  },
+  "service": {
+    "title": [
+      "24\/7 Customer Service",
+      "客服 全天候"
+    ],
+    "info": [
+      "Always available for your personal service needs.",
+      "24小时在线答疑, 件件有回复"
+    ],
+    "targetUrl": "http:\/\/ny.usleju.cn\/zh\/"
+  }
+}

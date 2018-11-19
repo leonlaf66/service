@@ -1,0 +1,26 @@
+{
+  "db": {
+    "client": "pg",
+    "connection": {
+      "host" : "127.0.0.1",
+      "user" : "addylee",
+      "password" : "123",
+      "database" : "usleju"
+    }
+  },
+  "db_source": {
+    "client": "pg",
+    "connection": {
+      "host" : "127.0.0.1",
+      "user" : "addylee",
+      "password" : "123",
+      "database" : "realestate"
+    }
+  },
+  "redis": {
+    "connection": {
+      "host": "127.0.0.1",
+      "port": 6379
+    }
+  }
+}

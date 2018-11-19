@@ -1,0 +1,12 @@
+{
+  "db": {
+    "connection": {
+      "host": "127.0.0.1",
+      "user": "addylee",
+      "database": "usleju"
+    }
+  },
+  "media": {
+    "baseUrl": "http://media.usleju.local"
+  }
+}

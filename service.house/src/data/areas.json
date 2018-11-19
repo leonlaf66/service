@@ -1,0 +1,27 @@
+[
+  {
+    "id": "ma",
+    "name": ["Boston", " 波士顿 "],
+    "desc": ["Massachusetts", "马萨诸塞州"]
+  },
+  {
+    "id": "ny",
+    "name": ["New York", "纽约"],
+    "desc": null
+  },
+  {
+    "id": "ga",
+    "name": ["Atlanta", "亚特兰大"],
+    "desc": ["Georgia", "佐治亚州"]
+  },
+  {
+    "id": "ca",
+    "name": ["Los Angel", "洛杉矶"],
+    "desc": ["California", "加利福尼亚"]
+  },
+  {
+    "id": "il",
+    "name": ["Chicago", "芝加哥"],
+    "desc": ["Illinois", "伊利诺斯"]
+  }
+]

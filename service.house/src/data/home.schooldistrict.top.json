@@ -1,0 +1,57 @@
+[
+  [
+    {
+      "name": "Lexington",
+      "name_cn": "列克星敦",
+      "image": "sa1.jpg",
+      "url": "\/school-district\/1\/",
+      "colRule": "1-2"
+    },
+    {
+      "name": "Acton Boxborough",
+      "name_cn": "阿克顿博克斯勤",
+      "image": "sa2.jpg",
+      "url": "\/school-district\/2\/",
+      "colRule": "1-2"
+    }
+  ],
+  [
+    {
+      "name": "Dover Sherborn",
+      "name_cn": "多佛舍伯恩",
+      "image": "sa3.jpg",
+      "url": "\/school-district\/3\/",
+      "colRule": "1-3"
+    },
+    {
+      "name": "Weston",
+      "name_cn": "韦斯顿",
+      "image": "sa4.jpg",
+      "url": "\/school-district\/5\/",
+      "colRule": "1-3"
+    },
+    {
+      "name": "Wayland",
+      "name_cn": "韦兰",
+      "image": "sa5.jpg",
+      "url": "\/school-district\/4\/",
+      "colRule": "1-3"
+    }
+  ],
+  [
+    {
+      "name": "Wellesley",
+      "name_cn": "韦尔斯利",
+      "image": "sa6.jpg",
+      "url": "\/school-district\/6\/",
+      "colRule": "1-3"
+    },
+    {
+      "name": "Lincoln Sudbury",
+      "name_cn": "林肯萨德伯里",
+      "image": "sa7.jpg",
+      "url": "\/school-district\/7\/",
+      "colRule": "2-3"
+    }
+  ]
+]

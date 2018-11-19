@@ -1,0 +1,26 @@
+{
+  "name": "service.house-index",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "@turf/turf": "^5.1.6",
+    "bull": "^3.5.2",
+    "chalk": "^2.4.1",
+    "commander": "^2.19.0",
+    "config": "^2.0.1",
+    "knex": "^0.15.2",
+    "kue": "^0.11.6",
+    "lodash": "^4.17.11",
+    "merge": "^1.2.1",
+    "node-xml2js-promise": "^1.1.1",
+    "numeral": "^2.0.6",
+    "object-get": "^2.1.0",
+    "pg": "^7.6.1",
+    "redis": "^2.8.0",
+    "redis-commands": "^1.4.0",
+    "replace-string": "^2.0.0",
+    "then-redis": "^2.0.1",
+    "ucwords": "^1.0.5"
+  }
+}

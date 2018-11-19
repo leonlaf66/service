@@ -1,0 +1,51 @@
+#!/usr/bin/env node
+const program = require('commander');
+const knex = require('../code/@local_modules/knex').db_source;
+const child_process = require('child_process');
+const chalk = require('chalk');
+
+async function run (cmd, opts) {
+  let houseData = {};
+
+  if (cmd.is_listhub) {
+    child_process.exec('open "https://app.listhub.com/syndication-docs/example.xml"');
+    process.exit();
+  }
+
+  if (cmd.prop_type) {
+    houseData = await knex('mls_rets')
+      .select('json_data')
+      .where('prop_type', cmd.prop_type.toUpperCase())
+      .limit(1)
+      .first()
+      .then(r => r.json_data || {a: 'ssss'});
+  } else if (cmd.list_no){
+    houseData = await knex('mls_rets')
+      .select('json_data')
+      .where('list_no', cmd.list_no)
+      .first()
+      .then(r => r.json_data || {});
+  }
+
+  let fields = Object.keys(houseData);
+  if (cmd.filter) {
+    fields = fields.filter(field => {
+      return field.indexOf(cmd.filter) !== -1;
+    });
+  }
+
+  fields.forEach(field => {
+    console.log(chalk.yellow(field) + chalk.grey(' = ') + chalk.grey(houseData[field]));
+  });
+
+  process.exit();
+}
+
+program
+  .version('0.1.0')
+  .option('-l, --is_listhub', 'Is Listhub')
+  .option('-d, --list_no <list_no>', 'List No')
+  .option('-p, --prop_type <prop_type>', 'Property Type')
+  .option('-f, --filter <filter>', 'Field Filter')
+  .action (run)
+  .parse(process.argv);
